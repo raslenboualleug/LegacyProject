@@ -1,7 +1,9 @@
+"use client"
+
 import React, { useContext, createContext, useState, useEffect, ReactNode } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 interface AuthContextType {
   token: string;
@@ -33,8 +35,8 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<any>({});
-  const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
-  const [role, setRole] = useState<string>(localStorage.getItem("role") || "");
+  const [token, setToken] = useState<string>(typeof window !== 'undefined' ? localStorage.getItem("token") || "" : "");
+  const [role, setRole] = useState<string>(typeof window !== 'undefined' ? localStorage.getItem("role") || "" : "");
 
   const router = useRouter();
 

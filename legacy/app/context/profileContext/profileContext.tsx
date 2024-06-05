@@ -1,6 +1,8 @@
+"use client"
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-import { useAuth } from './auth';
+import { useAuth } from '../authContext/authContext';
 
 interface User {
   id: string;
