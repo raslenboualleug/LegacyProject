@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Box, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; 
 
 interface User {
+    id : number;
   userName: string;
   email: string;
   address: string;
@@ -12,34 +14,35 @@ interface User {
 const UserProfile: React.FC = () => {
   const [user, setUser] = useState<Partial<User>>({});
   const router = useRouter();
+  const rolle =  localStorage.getItem('role');
+  const [role, setRole] = useState(JSON.parse(rolle || ""));
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          router.push('/login');
-          return;
-        }
-        const response = await axios.get('http://localhost:5000/user/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUser(response.data);
-      } catch (error) {
-        console.error('Error fetching user information', error);
-        // Handle error, e.g., redirect to login page
-        // router.push('/login');
-      }
-    };
-
-    fetchUser();
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded: any = jwtDecode(token); 
+      console.log(decoded,"lol");
+      const userId: number = decoded.id as number;
+      
+      fetchUser(userId);
+    }
   }, []);
 
+  const fetchUser = async (userId: number) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/Client/get/${userId}`);
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user information', error);
+    }
+  };
+
   const logOut = () => {
+    setUser({});
+    localStorage.removeItem('user');
     localStorage.removeItem('token');
-    router.push('/login');
+    localStorage.removeItem('role');
+    router.push('/auth/login');
   };
 
   return (

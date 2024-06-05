@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await axios.post(`http://localhost:5000/${data.role}/${str}`, data);
       const userData = response.data.data;
-
+        console.log(response.data)
       setUser(userData.userName);
       localStorage.setItem("user", JSON.stringify(userData.userName));
       setToken(response.data.token);
