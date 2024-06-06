@@ -54,7 +54,7 @@ const Categories: React.FC = () => {
         <Grid container spacing={3}>
           {categories.slice(index, index + 6).map((category) => (
             <Grid item xs={12} sm={6} md={2} key={category.id}>
-              <Link href={{ pathname: '/shop', query: { category: category.label } }} >
+              <Link href={{ pathname: '/shop', query: { category: category.label } }} style={{textDecoration:"none"}} >
               <Card sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 150 }} >
                 <CardContent sx={{ textAlign: 'center' }}>
                   {category.icon}

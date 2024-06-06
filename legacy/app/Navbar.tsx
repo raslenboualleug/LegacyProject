@@ -54,14 +54,17 @@ const Navbar: React.FC = () => {
             <FavoriteBorderIcon />
           </IconButton>
           </Link>
-        
+          <Link href='/cart'  style={{textDecoration:"none",color:"black"}}>
           <IconButton color="inherit">
             <ShoppingCartIcon />
           </IconButton>
+          </Link>
           {user && (
+            <Link href='/profile'  style={{textDecoration:"none",color:"black"}}>
             <IconButton color="inherit">
               <AccountCircleIcon />
             </IconButton>
+            </Link>
           )}
         </Box>
       </Toolbar>
