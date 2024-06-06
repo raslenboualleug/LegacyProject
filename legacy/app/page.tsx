@@ -12,12 +12,12 @@ export default function Home() {
   return (
     <div>
       <Navbar />
-      <Navbanner />
-      <Ourproducts />
+      <Navbanner /> 
+      <Todays />
       <Categories />
       <Thismonth />
+      <Ourproducts />
       <Featured />
-      <Todays />
       <Services />
     </div>
   );
