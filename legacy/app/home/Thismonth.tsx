@@ -4,6 +4,7 @@ import SquareIcon from '@mui/icons-material/Square';
 import axios from "axios";
 import Link from "next/link"
 import ProductCard from "../ProductCard";
+import {useRouter} from 'next/navigation'
 interface Product{
     id:number,
     name:string,
@@ -16,7 +17,7 @@ interface Product{
 
 const Thismonth:React.FC = () => {
   const [products,setproducts]=useState<Product[]>([])
- 
+  const router=useRouter()
   useEffect(() => {
     axios.get<Product[]>('http://localhost:5000/Client/products') 
       .then(response => {
@@ -48,7 +49,7 @@ const Thismonth:React.FC = () => {
           <Grid item xs={12} sm={6} md={3} key={product.id}>
            <ProductCard
               product={product}
-               onClick={() =>{}  }
+               onClick={() =>{ router.push(`/Oneproduct/${product.id}`)}  }
               isWishlist={false}
             />
           </Grid>
