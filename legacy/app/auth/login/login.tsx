@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/authContext/authContext';
 import { useRouter } from 'next/navigation';
-
+import Navbar from '../../Navbar';
 import {
   Box,
   Grid,
@@ -43,6 +43,7 @@ const Login: React.FC = () => {
 
   return (
     <div>
+      <Navbar />
       <Box mt={4}>
         <Grid container justifyContent="center">
           <Grid item xs={12} md={9}>
