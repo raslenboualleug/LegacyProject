@@ -9,7 +9,7 @@ interface User {
   userName: string;
   email: string;
   role: string;
-  // Add other user properties here
+  address: string; 
 }
 
 interface ProfileContextType {

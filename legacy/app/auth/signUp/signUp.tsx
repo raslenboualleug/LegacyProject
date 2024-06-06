@@ -1,5 +1,4 @@
-"use client "
-
+"use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/authContext/authContext';
@@ -22,6 +21,7 @@ interface SignupData {
   email: string;
   password: string;
   role: string;
+  address: string; 
   CIN?: string;
 }
 
@@ -30,6 +30,7 @@ const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [role, setRole] = useState<string>('Client');
   const [password, setPassword] = useState<string>('');
+  const [address, setAddress] = useState<string>(''); 
   const [message, setMessage] = useState<string>('');
   const [CIN, setCIN] = useState<string>('');
   const [adress, setAdress]=useState<string>('')
@@ -40,7 +41,14 @@ const Signup: React.FC = () => {
     e.preventDefault();
     try {
       await loginAction(
-        { userName: username, email: email, password: password, role: role, CIN: CIN } as SignupData,
+        {
+          userName: username,
+          email: email,
+          password: password,
+          role: role,
+          address: address,
+          CIN: CIN
+        } as SignupData,
         'signup'
       ).then(() => {
         setMessage('Signup successful!');
@@ -112,6 +120,14 @@ const Signup: React.FC = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       sx={{ marginBottom: 2 }}
                     />
+                    <TextField
+                      fullWidth
+                      label="Address" // Added address input field
+                      variant="outlined"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      sx={{ marginBottom: 2 }}
+                    />
                     <FormControl
                       fullWidth
                       variant="outlined"
@@ -129,8 +145,10 @@ const Signup: React.FC = () => {
                         <MenuItem value="Seller">Seller</MenuItem>
                       </Select>
                     </FormControl>
+
                     {role === 'Seller' ? (
                       <TextField  
+
                         fullWidth
                         label="CIN"
                         variant="outlined"
