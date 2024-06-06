@@ -9,6 +9,7 @@ import Navbar from "./Navbar";
 import Navbanner from "./home/Navbanner";
 import ScrollToTop from "./ScorllToTop";
 
+
 export default function Home() {
   return (
     <div>
