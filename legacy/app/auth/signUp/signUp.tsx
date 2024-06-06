@@ -33,6 +33,7 @@ const Signup: React.FC = () => {
   const [address, setAddress] = useState<string>(''); 
   const [message, setMessage] = useState<string>('');
   const [CIN, setCIN] = useState<string>('');
+  const [adress, setAdress]=useState<string>('')
   const router = useRouter();
   const { loginAction } = useAuth();
 
@@ -144,8 +145,10 @@ const Signup: React.FC = () => {
                         <MenuItem value="Seller">Seller</MenuItem>
                       </Select>
                     </FormControl>
-                    {role === 'Seller' && (
-                      <TextField
+
+                    {role === 'Seller' ? (
+                      <TextField  
+
                         fullWidth
                         label="CIN"
                         variant="outlined"
@@ -154,7 +157,15 @@ const Signup: React.FC = () => {
                         onChange={(e) => setCIN(e.target.value)}
                         sx={{ marginBottom: 2 }}
                       />
-                    )}
+                    ):  <TextField
+                    fullWidth
+                    label="Adress"
+                    variant="outlined"
+                    type="text"
+                    value={adress}
+                    onChange={(e) => setAdress(e.target.value)}
+                    sx={{ marginBottom: 2 }}
+                  />}
                     <Button
                       type="submit"
                       variant="contained"
