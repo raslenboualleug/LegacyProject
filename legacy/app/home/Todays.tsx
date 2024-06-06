@@ -3,6 +3,7 @@ import { Box, Grid, Typography, Button } from "@mui/material";
 import SquareIcon from '@mui/icons-material/Square';
 import axios from "axios";
 import Link from "next/link"
+import ProductCard from "../ProductCard";
 
 
 interface TimeLeft {
@@ -130,10 +131,10 @@ const Todays = () => {
       <Grid container spacing={3} sx={{ marginBottom: 3 }}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={3} key={product.id}>
-            {/* <ProductCard
+            <ProductCard
               product={product}
               onClick={() => navigate('/oneProduct', { state: { productId: product.id } })}
-            /> */}
+            />
           </Grid>
         ))}
       </Grid>
