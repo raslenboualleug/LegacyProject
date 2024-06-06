@@ -3,7 +3,7 @@ import { Grid, Box, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; 
-
+import Navbar from '../../Navbar';
 interface User {
     id : number;
   userName: string;
@@ -47,6 +47,7 @@ const UserProfile: React.FC = () => {
 
   return (
     <div>
+      <Navbar/>
       <div style={{ width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
         <Box sx={{ width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>

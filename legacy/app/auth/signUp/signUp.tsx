@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/authContext/authContext';
-
+import Navbar from '../../Navbar';
 import {
   Box,
   Grid,
@@ -17,7 +17,6 @@ import {
   Link,
 } from '@mui/material';
 
-// Define a type for the loginAction function's argument
 interface SignupData {
   userName: string;
   email: string;
@@ -52,7 +51,7 @@ const Signup: React.FC = () => {
 
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       <Box mt={4}>
         <Grid container justifyContent="center">
           <Grid item xs={12} md={9}>
@@ -152,7 +151,7 @@ const Signup: React.FC = () => {
                       Already have an account?{' '}
                       <Link
                         component="button"
-                        onClick={() => router.push('/login')}
+                        onClick={() => router.push('/auth/login')}
                         sx={{ color: 'red' }}
                       >
                         Log In

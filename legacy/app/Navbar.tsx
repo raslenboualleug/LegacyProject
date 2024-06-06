@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
           <Link href="/about" style={{textDecoration:"none",color:"black"}}>
             <Button color="inherit">About</Button>
           </Link> 
-          <Link href="/signup" style={{textDecoration:"none",color:"black"}}>
+          <Link href="/auth/signUp" style={{textDecoration:"none",color:"black"}}>
             <Button color="inherit">SignUp</Button>
           </Link>
         </Box>
