@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Grid, Box, Button ,Typography} from "@mui/material";
-// import ProductCard from "./ProductCard";
+import ProductCard from "../ProductCard";
 import Navbar from "../Navbar";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
@@ -85,9 +85,9 @@ const Wishlist = () => {
           <Grid container spacing={3}>
             {wishlistItems.map((product) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                {/* 
-                <ProductCard product={product} isWishlist={true} />
-                */}
+                
+                <ProductCard product={product} isWishlist={true} onClick={()=>{}} />
+               
                
               </Grid>
             ))}
