@@ -4,6 +4,13 @@ import SquareIcon from '@mui/icons-material/Square';
 import axios from "axios";
 import Link from "next/link"
 
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
 interface Product{
     id:number,
     name:string,
@@ -31,7 +38,7 @@ const Todays = () => {
 
   const calculateTimeLeft = () => {
     const difference = +getNextMidnight() - +new Date();
-    let timeLeft = {};
+    let timeLeft: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
     if (difference > 0) {
       timeLeft = {
@@ -45,7 +52,7 @@ const Todays = () => {
     return timeLeft;
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -104,14 +111,13 @@ const Todays = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-//   const renderTimer = () => {
-//     return (
-//       <span>
-//         {timeLeft.days}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
-//       </span>
-//     );
-//   };
-
+  const renderTimer = (timeLeft: TimeLeft): JSX.Element => {
+    return (
+      <span>
+        {timeLeft.days}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
+      </span>
+    );
+  };
   return (
     <Box sx={{ padding: 3, marginTop: "50px" }}>
       <Typography variant="h5" component="h5" sx={{ color: "red", marginRight: 2, display: "flex", alignItems: "center" }}>
@@ -119,9 +125,8 @@ const Todays = () => {
       </Typography>
 
       <Typography variant="h4" component="div">
-        {/* Flash Sales {renderTimer()} */}
+        {renderTimer(timeLeft)}
       </Typography>
-
       <Grid container spacing={3} sx={{ marginBottom: 3 }}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={3} key={product.id}>
