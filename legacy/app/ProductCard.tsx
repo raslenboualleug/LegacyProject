@@ -63,6 +63,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.stopPropagation();
     if (user) {
       let cartItems: Item[] = JSON.parse(localStorage.getItem('Items') || '[]');
+      console.log(cartItems);
+      
       const existingItem = cartItems.find((item) => item.id === product.id);
       if (existingItem) {
         existingItem.quantity += 1;
@@ -123,7 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const removeFromWishlist = async (e: React.MouseEvent, productId: number) => {
     e.stopPropagation();
     try {
-      await axios.post('http://localhost:5000/Client/wishlist/remove', {
+      await axios.delete('http://localhost:5000/Client/wishlist/remove', {
         data: { userId: userId, productId: productId },
       });
       Swal.fire({

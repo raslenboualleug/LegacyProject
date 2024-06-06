@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import ProductCard from "../ProductCard";
 import Services from "@/services/page";
+import Navbar from "../Navbar";
 interface Product {
   id: number;
   name: string;
@@ -32,7 +33,7 @@ const categories: string[] = [
 const Shop = () => {
   const search = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
-  const [chosen, setChosen] = useState<string>(search.get("category") || "");
+  const [chosen, setChosen] = useState<string>(search.get("category") || "Women's fashion");
   const router = useRouter();
 
   useEffect(() => {
@@ -54,6 +55,7 @@ const Shop = () => {
 
   return (
     <div>
+      <Navbar />
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Box>
           <Typography
@@ -94,10 +96,8 @@ const Shop = () => {
                   <ProductCard
                     product={prod}
                     onClick={() => {
-                      router.push("/oneProduct"),
-                        {
-                          query: { productId: prod.id },
-                        };
+                      router.push(`/Oneproduct/${prod.id}`)
+                       
                     }}
                     isWishlist={false}
                   />
