@@ -1,5 +1,3 @@
-
-
 "use client";
 import React, { useState } from 'react';
 import { useAuth } from '../../context/authContext/authContext';
@@ -28,8 +26,8 @@ const Login: React.FC = () => {
       await loginAction({
         userName: username,
         password: password,
-        email: '', // Provide an empty string for email (not available in login)
-        role: 'client', // Assuming 'client' is the default role for login
+        email: '', 
+        role: 'client',
       }, 'login');
       router.push('/');
     } catch (error: any) {
@@ -96,7 +94,7 @@ const Login: React.FC = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       sx={{ marginBottom: 2 }}
                     />
-
+                
                     <Button
                       type="submit"
                       variant="contained"
