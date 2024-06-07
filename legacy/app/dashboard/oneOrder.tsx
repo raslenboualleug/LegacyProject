@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import { Typography, Card, CardContent, List, ListItem, ListItemText } from '@mui/material';
-import Dashboard from './dashboard';
 
 interface Order {
   id: number;
@@ -16,8 +14,8 @@ interface Order {
 }
 
 const OneOrder: React.FC = () => {
-  const router = useRouter();
-  const { orderId } = router.query;
+  const pathname  = window.location.pathname;
+  const orderId=pathname.split("/").pop()
   const [order, setOrder] = useState<Order | null>(null);
 
   useEffect(() => {
@@ -40,7 +38,6 @@ const OneOrder: React.FC = () => {
 
   return (
     <div>
-      <Dashboard />
       <Card style={{ maxWidth: 800, margin: '20px auto', padding: '20px', textAlign: 'center' }}>
         <CardContent>
           <Typography variant="h4" gutterBottom>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
-
+import { useRouter } from 'next/navigation';
 interface Order {
   id: number;
   userId: number;
@@ -15,7 +15,7 @@ interface Order {
 
 const OrdersTable: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
-
+  const router=useRouter()
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -57,7 +57,7 @@ const OrdersTable: React.FC = () => {
           </TableHead>
           <TableBody>
             {orders.map((order) => (
-              <TableRow key={order.id}>
+              <TableRow key={order.id}  onClick={()=>router.push(`/orders/${order.id}`)}>
                 <TableCell>{order.userId}</TableCell>
                 <TableCell>{order.products}</TableCell>
                 <TableCell>{order.quantity}</TableCell>
