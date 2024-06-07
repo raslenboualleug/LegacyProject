@@ -1,10 +1,13 @@
+
+"use client"
+
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import SquareIcon from '@mui/icons-material/Square';
 import axios from "axios";
-import Link from "next/link"
+import Link from "next/link";
 import ProductCard from "../ProductCard";
-
+import { useRouter } from "next/navigation";
 
 interface TimeLeft {
   days: number;
@@ -12,20 +15,21 @@ interface TimeLeft {
   minutes: number;
   seconds: number;
 }
-interface Product{
-    id:number,
-    name:string,
-    price:number,
-    category:string,
-    stock:number,
-    picture:string,
-    userId:number
- }
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  stock: number;
+  picture: string;
+  userId: number;
+ 
+}
 
 const Todays = () => {
+  const router = useRouter();
 
-  
-  // Function to get midnight of the next day
   const getNextMidnight = () => {
     const now = new Date();
     const nextMidnight = new Date(
@@ -73,7 +77,7 @@ const Todays = () => {
           return {
             ...product,
             discount,
-            discountedPrice: discountedPrice.toFixed(2) // Round to 2 decimal places
+            discountedPrice: Number(discountedPrice.toFixed(2)) // Convert to number
           };
         });
         setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
@@ -98,7 +102,7 @@ const Todays = () => {
               return {
                 ...product,
                 discount,
-                discountedPrice: discountedPrice.toFixed(2) // Round to 2 decimal places
+                discountedPrice: Number(discountedPrice.toFixed(2)) // Convert to number
               };
             });
             setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
@@ -119,6 +123,7 @@ const Todays = () => {
       </span>
     );
   };
+
   return (
     <Box sx={{ padding: 3, marginTop: "50px" }}>
       <Typography variant="h5" component="h5" sx={{ color: "red", marginRight: 2, display: "flex", alignItems: "center" }}>
@@ -131,18 +136,22 @@ const Todays = () => {
       <Grid container spacing={3} sx={{ marginBottom: 3 }}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={3} key={product.id}>
-            <ProductCard
+           <ProductCard
               product={product}
-              onClick={() => navigate('/oneProduct', { state: { productId: product.id } })}
+               onClick={() =>{ router.push(`/Oneproduct/${product.id}`)}  }
+              isWishlist={false}
             />
           </Grid>
         ))}
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-      <Link href={{ pathname: '/shop', query: { productId: products .map(product=>product.id)} }} >
-        <Button variant="contained" style={{ color: "white", backgroundColor: "red" }} >
-          View all products
-        </Button>
+        <Link href={{
+          pathname: '/shop',
+          query: { productId: products.map(product => product.id) }
+        }}>
+          <Button variant="contained" style={{ color: "white", backgroundColor: "red" }}>
+            View all products
+          </Button>
         </Link>
       </Box>
       <hr />

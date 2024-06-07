@@ -1,13 +1,14 @@
 
 "use client";
-import Ourproducts from "./home/Ourproducts";
-import Categories from "./home/Categories";
-import Thismonth from "./home/Thismonth";
-import Services from "./home/Services";
-import Featured from "./home/Featured";
-import Todays from "./home/Todays";
+import Ourproducts from "./AddProduct";
+import Categories from "./Home/Categories";
+import Thismonth from "./Home/Thismonth";
+import Services from "./Services";
+import Featured from "./Home/Featured";
+import Todays from "./Home/Todays";
 import Navbar from "./Navbar";
-import Navbanner from "./home/Navbanner";
+import Navbanner from "./Navbar";
+import ScrollToTop from "./ScorllToTop";
 
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
       <Ourproducts />
       <Featured />
       <Services />
+      <ScrollToTop />
     </div>
   );
 }
