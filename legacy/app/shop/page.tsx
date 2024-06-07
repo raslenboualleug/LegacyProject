@@ -6,16 +6,19 @@ import { useSearchParams, useRouter } from 'next/navigation';
 // import { withRouter } from 'next/router';
 import ProductCard from '../ProductCard';
 import Services from '@/services/page';
+
 interface Product {
   id: number;
   name: string;
   picture: string;
-  price:GLfloat;
+  price: GLfloat;
   stock: GLfloat;
   description: string;
   userId: number;
   discountedPrice?: number;
   discount?: number;
+  rating: number;
+  numOfRating:number
 }
 
 const categories: string[] = [
@@ -29,15 +32,15 @@ const categories: string[] = [
   'Health & Beauty',
 ];
 
-
 const Shop = () => {
   const search = useSearchParams();
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [chosen, setChosen] = useState<string>('');
+  const [update,setUpdate]= useState<Boolean>(false)
 
-  const category = search.get('category');
-  console.log(category);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [chosen, setChosen] = useState<string>(
+    search.get('category') || "Women's fashion"
+  );
 
   useEffect(() => {
     console.log(chosen);
@@ -53,7 +56,7 @@ const Shop = () => {
           console.error('Error fetching products:', error);
         });
     }
-  }, [chosen]);
+  }, [chosen,update]);
 
   const chooseCategory = (newCategory: string) => {
     setChosen(newCategory);
@@ -99,12 +102,13 @@ const Shop = () => {
               {products.map((prod) => (
                 <Grid key={prod.id} item xs={12} sm={6} md={4} lg={3}>
                   <ProductCard
+                  update={update}
+                  setUpdate={setUpdate}
                     product={prod}
                     onClick={() => {
-                      router.push('/oneProduct'), {
-                        query:{productId:prod.id}
-                      };
+                      router.push(`/Oneproduct/${prod.id}`);
                     }}
+                    isWishlist={false}
                   />
                 </Grid>
               ))}

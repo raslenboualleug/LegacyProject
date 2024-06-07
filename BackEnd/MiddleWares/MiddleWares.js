@@ -44,7 +44,7 @@ const validiSeller = (req, res, next) => {
   next();
 };
 const handleErrors = (res, error) => {
-  console.error(error);
+  console.error('Error :',error);
   res.status(500).json({ error: error.message });
 };
 

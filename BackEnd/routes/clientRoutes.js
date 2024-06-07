@@ -16,6 +16,7 @@ router.get('/products', Product.getAllproducts);
 router.get('/products/FS', Product.getTopStockProducts);
 router.get('/products/:productId', Product.getOneProduct);
 router.get('/products/category/:category', Product.getByCategory);
+router.put('/rati/:productId',Product.addRating)
 
 router.post('/order',Order.addOrder) 
 

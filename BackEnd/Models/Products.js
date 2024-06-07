@@ -26,6 +26,15 @@ module.exports=(connection,DataTypes)=>{
         type: DataTypes.STRING, 
         allowNull: false, 
       },
+      rating:{
+        type:DataTypes.FLOAT,
+        allowNull:true
+      },
+      numOfRating:{
+        type:DataTypes.INTEGER, 
+        allowNull:true
+      },
+
       userId:{
         type:DataTypes.INTEGER,
         allowNull:false
