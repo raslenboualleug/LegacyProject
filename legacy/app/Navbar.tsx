@@ -1,5 +1,5 @@
-"use client"
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { AppBar, Toolbar, Button, Box, InputBase, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -8,8 +8,12 @@ import Link from 'next/link';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar: React.FC = () => {
-  const user = localStorage.getItem('user');
+  const [user, setUser] = useState<string | null>(null);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    setUser(storedUser);
+  }, []);
   return (
     <AppBar position="sticky" style={{ color: 'black', backgroundColor: 'white' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
