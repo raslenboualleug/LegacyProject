@@ -63,8 +63,8 @@ const UserProfile: React.FC = () => {
   return (
     <div>
       <Navbar />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
-        <Card sx={{ width: '45%', padding: 3, boxShadow: 3 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
+        <Card sx={{ width: '100%', maxWidth: '600px', padding: 3, boxShadow: 3, mb: showOrders ? 3 : 0 }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
               <Avatar sx={{ width: 56, height: 56, mr: 2 }} />
@@ -126,7 +126,7 @@ const UserProfile: React.FC = () => {
           </CardContent>
         </Card>
         {showOrders && (
-          <Card sx={{ width: '45%', padding: 3, boxShadow: 3 }}>
+          <Card sx={{ width: '100%', maxWidth: '600px', padding: 3, boxShadow: 3 }}>
             <CardContent>
               <OrdersList />
             </CardContent>

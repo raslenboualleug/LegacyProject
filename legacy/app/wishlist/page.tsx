@@ -35,7 +35,7 @@ const Wishlist = () => {
     };
 
     fetchWishlist();
-  }, [userId, wishlistItems]);
+  }, [userId]);
 
   const moveAllToBag = async () => {
     try {

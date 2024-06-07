@@ -18,6 +18,8 @@ const EditProfile: React.FC = () => {
   const { user, updateUser } = useProfile();
   const router = useRouter();
   const role =localStorage.getItem('role')
+  console.log(role);
+  
   useEffect(() => {
     if (user) {
       setUsername(user.userName || '');
@@ -106,7 +108,7 @@ const EditProfile: React.FC = () => {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                    {role === 'Client' &&
+                    {role === "Client" &&
                       <TextField
                         fullWidth
                         label="Address"
