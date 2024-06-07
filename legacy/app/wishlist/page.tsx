@@ -69,40 +69,39 @@ const Todays = () => {
       try {
         const response = await axios.get<Product[]>('http://localhost:5000/Client/products/FS');
         const productsWithDiscounts = response.data.map(product => {
-          const discount = Math.floor(Math.random() * 21) + 10; // Random discount between 10% and 30%
+          const discount = Math.floor(Math.random() * 21) + 10; 
           const discountedPrice = product.price - (product.price * (discount / 100));
           return {
             ...product,
             discount,
-            discountedPrice: discountedPrice.toFixed(2) // Round to 2 decimal places
+            discountedPrice: discountedPrice.toFixed(2) 
           };
         });
-        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
+        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); 
       } catch (error) {
         console.error('There was an error fetching the products!', error);
       }
     };
 
     fetchProducts();
-  }, []); // Fetch products on component mount
+  }, []); 
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const nextMidnight = getNextMidnight();
       if (+new Date() >= +nextMidnight) {
-        // Fetch new products when the time is midnight
         axios.get<Product[]>('http://localhost:5000/Client/products/FS')
           .then(response => {
             const productsWithDiscounts = response.data.map(product => {
-              const discount = Math.floor(Math.random() * 21) + 10; // Random discount between 10% and 30%
+              const discount = Math.floor(Math.random() * 21) + 10; 
               const discountedPrice = product.price - (product.price * (discount / 100));
               return {
                 ...product,
                 discount,
-                discountedPrice: discountedPrice.toFixed(2) // Round to 2 decimal places
+                discountedPrice: discountedPrice.toFixed(2)
               };
             });
-            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
+            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); 
           })
           .catch(error => {
             console.error('There was an error fetching the products!', error);
@@ -135,7 +134,7 @@ const Todays = () => {
           <Grid item xs={12} sm={6} md={3} key={product.id}>
             <ProductCard
               product={product}
-              isWishlist={false} // Pass the isWishlist prop
+              isWishlist={false} 
               onClick={() => router.push({
                 pathname: '/oneProduct',
                 query: { productId: product.id }
