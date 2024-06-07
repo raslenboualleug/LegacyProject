@@ -1,37 +1,47 @@
-
-
-"use client";
 import React, { useState } from 'react';
 import { useAuth } from '../../context/authContext/authContext';
 import { useRouter } from 'next/navigation';
 import Navbar from '../../Navbar';
+import axios from 'axios';
+
 import {
   Box,
   Grid,
   Typography,
   TextField,
   Button,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
   Link,
 } from '@mui/material';
 
-const Login: React.FC = () => {
+function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [role, setRole] = useState<string>('Client');
   const [message, setMessage] = useState<string>('');
 
-  const { loginAction } = useAuth();
+  const { setToken,fetchUser,loginAction } = useAuth();
   const router = useRouter();
 
-  const handleLogIn = async (e: React.FormEvent) => {
+  const handleLogIn = async (e:any) => {
     e.preventDefault();
     try {
-      await loginAction({
-        userName: username,
+      const response = await axios.get(`http://localhost:5000/Client/${username}`);
+      const user = response.data;
+      const loginResponse : any = await loginAction({
+        userName: username ,
         password: password,
-        email: '', // Provide an empty string for email (not available in login)
-        role: 'client', // Assuming 'client' is the default role for login
-      }, 'login');
-      router.push('/');
+        email:user.email,
+        role: user.role,
+      },'login');
+      const token = loginResponse.data.token;
+      setToken(token);
+      localStorage.setItem('token', token);
+      await fetchUser(user);
+      
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         setMessage('User not found. Please check your username.');

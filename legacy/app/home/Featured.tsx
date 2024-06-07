@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Grid, Card, CardMedia, Typography } from "@mui/material";
 import SquareIcon from '@mui/icons-material/Square';
 
-const Featured = () => {
+const Featured:React.FC= () => {
   return (
     <Box sx={{ padding: 3, marginTop: "50px" }}>
       <Typography variant="h5" component="h5" sx={{ color: "red", display: "flex", alignItems: "center" }}>

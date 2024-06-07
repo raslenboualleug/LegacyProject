@@ -1,59 +1,59 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Button, Stack } from '@mui/material';
-import axios from 'axios';
-import { useSearchParams, useRouter } from 'next/navigation';
-// import { withRouter } from 'next/router';
-import ProductCard from '../ProductCard';
-import Services from '@/services/page';
+"use client";
+import React, { useState, useEffect } from "react";
+import { Box, Grid, Typography, Button, Stack } from "@mui/material";
+import axios from "axios";
+
+import { useSearchParams, useRouter } from "next/navigation";
+import ProductCard from "../ProductCard";
+import Services from "@/services/page";
+import Navbar from "../Navbar";
 interface Product {
   id: number;
   name: string;
   picture: string;
-  price:GLfloat;
+  price: GLfloat;
   stock: GLfloat;
   description: string;
   userId: number;
   discountedPrice?: number;
   discount?: number;
+  rating: number;
+  numOfRating:number
 }
 
 const categories: string[] = [
   "Women's fashion",
   "Men's fashion",
-  'Electronics',
-  'Home & lifestyle',
-  'Sports & Outdoors',
+  "Electronics",
+  "Home & lifestyle",
+  "Sports & Outdoors",
   "Baby's toys",
-  'Groceries & Pets',
-  'Health & Beauty',
+  "Groceries & Pets",
+  "Health & Beauty",
 ];
-
 
 const Shop = () => {
   const search = useSearchParams();
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [chosen, setChosen] = useState<string>('');
+  const [update,setUpdate]= useState<Boolean>(false)
 
-  const category = search.get('category');
-  console.log(category);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [chosen, setChosen] = useState<string>(
+    search.get('category') || "Women's fashion"
+  );
 
   useEffect(() => {
-    console.log(chosen);
-
     if (chosen) {
       axios
         .get(`http://localhost:5000/Client/products/category/${chosen}`)
         .then((response) => {
           setProducts(response.data);
-          console.log(response.data, 'RESPONE HELLO');
         })
         .catch((error) => {
-          console.error('Error fetching products:', error);
+          console.error("Error fetching products:", error);
         });
     }
-  }, [chosen]);
+  }, [chosen,update]);
 
   const chooseCategory = (newCategory: string) => {
     setChosen(newCategory);
@@ -61,16 +61,17 @@ const Shop = () => {
 
   return (
     <div>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+      <Navbar />
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Box>
           <Typography
             component="h2"
             sx={{
               marginBottom: 2,
-              fontSize: '2rem',
-              fontWeight: 'bold',
-              textAlign: 'left',
-              marginLeft: '16px',
+              fontSize: "2rem",
+              fontWeight: "bold",
+              textAlign: "left",
+              marginLeft: "16px",
             }}
           >
             Our Shop
@@ -78,15 +79,15 @@ const Shop = () => {
           <Stack
             direction="row"
             spacing={2}
-            sx={{ marginTop: 5, marginBottom: 2, justifyContent: 'center' }}
+            sx={{ marginTop: 5, marginBottom: 2, justifyContent: "center" }}
           >
             {categories.map((cats) => (
               <Button
                 key={cats}
                 variant="contained"
                 style={{
-                  backgroundColor: chosen === cats ? 'darkred' : 'red',
-                  color: 'white',
+                  backgroundColor: chosen === cats ? "darkred" : "red",
+                  color: "white",
                 }}
                 onClick={() => chooseCategory(cats)}
               >
@@ -99,12 +100,13 @@ const Shop = () => {
               {products.map((prod) => (
                 <Grid key={prod.id} item xs={12} sm={6} md={4} lg={3}>
                   <ProductCard
+                  update={update}
+                  setUpdate={setUpdate}
                     product={prod}
                     onClick={() => {
-                      router.push('/oneProduct'), {
-                        query:{productId:prod.id}
-                      };
+                      router.push(`/Oneproduct/${prod.id}`);
                     }}
+                    isWishlist={false}
                   />
                 </Grid>
               ))}

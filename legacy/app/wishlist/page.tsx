@@ -3,15 +3,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Grid, Box, Button ,Typography} from "@mui/material";
-// import ProductCard from "./ProductCard";
+import ProductCard from "../ProductCard";
 import Navbar from "../Navbar";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
-
+ const router=useRouter()
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -35,7 +36,7 @@ const Wishlist = () => {
     };
 
     fetchWishlist();
-  }, [userId, wishlistItems]);
+  }, [userId]);
 
   const moveAllToBag = async () => {
     try {
@@ -49,7 +50,7 @@ const Wishlist = () => {
         });
       }
       localStorage.setItem('Items', JSON.stringify(cartItems));
-    
+
     } catch (error) {
       console.error("Error moving all items to cart", error);
     }
@@ -70,7 +71,7 @@ const Wishlist = () => {
           >
             <Box sx={{ flexGrow: 1 }}>
             <h2> My   Wishlist</h2>
-          
+
             </Box>
             <Link  href="/cart">
             <Button
@@ -85,10 +86,12 @@ const Wishlist = () => {
           <Grid container spacing={3}>
             {wishlistItems.map((product) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                {/* 
-                <ProductCard product={product} isWishlist={true} />
-                */}
-               
+               <ProductCard
+              product={product}
+              isWishlist={false} 
+              onClick={() => router.push(`/Oneproduct/${product.id}`)}
+            />
+
               </Grid>
             ))}
           </Grid>

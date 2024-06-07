@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -17,6 +18,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useRouter } from "next/navigation";
 import{ jwtDecode} from "jwt-decode";
 import Swal from "sweetalert2";
+import Navbar from "@/app/Navbar";
+import RelatedProducts from './RelatedProducts'
+import SquareIcon from '@mui/icons-material/Square';
+import Services from "@/app/Services";
+import ScrollToTop from "@/app/ScorllToTop";
 
 interface Product {
   id: number;
@@ -50,6 +56,8 @@ const One: React.FC = () => {
   useEffect(() => {
     // Extract productId from the pathname
     const pathname = window.location.pathname;
+    console.log(pathname);
+    
     const productId = pathname.split("/").pop();
 
     if (productId) {
@@ -99,7 +107,7 @@ const One: React.FC = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-      } catch (error) {
+      } catch (error:any) {
         console.error("Error adding to wishlist:", error);
         let errorMessage =
           "There was an error adding the item to your wishlist.";
@@ -126,7 +134,8 @@ const One: React.FC = () => {
 
   return (
     <div className="App">
-      <Box sx={{ width: "90%", margin: "0 auto", mt: 4, mr: 2 }}>
+      <Navbar />
+      <Box sx={{ width: "90%", margin: "0 auto", mt: 4, mr: 8 }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
             <img
@@ -160,7 +169,7 @@ const One: React.FC = () => {
               <IconButton onClick={() => PlusMinus(1)}>
                 <AddIcon />
               </IconButton>
-            </Box>
+            
             <Button
               variant="contained"
               color="primary"
@@ -180,9 +189,8 @@ const One: React.FC = () => {
             <IconButton onClick={addToWishlist}>
               <FavoriteBorderIcon />
             </IconButton>
-          </Grid>
-        </Grid>
-        <Box
+            </Box>
+          <Box
           sx={{
             maxWidth: 400,
             border: "1px solid #ccc",
@@ -206,9 +214,18 @@ const One: React.FC = () => {
           <Typography variant="body2">
             Free 30 Days Delivery Returns. Details
           </Typography>
-        </Box>
+        </Box> 
+        </Grid>
+        </Grid>
+        <hr />
+        <Typography variant="h5" component="h5" sx={{ color: "red", marginRight: 2, display: "flex", alignItems: "center",marginTop:"50px" }}>
+        <SquareIcon /> Related Products
+      </Typography>
+      <RelatedProducts chosen={product.category} />
+      <Services />
+      <ScrollToTop />
       </Box>
-      <hr />
+      
     </div>
   );
 };
