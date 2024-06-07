@@ -18,14 +18,16 @@ import Link from 'next/link';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar: React.FC = () => {
+ const [users,setUser]= useState({})
+  const user = localStorage.getItem('user');  
 
-  const user = localStorage.getItem('user');
-  const counter = localStorage.getItem('counter');
+      const[counter,setCounter]=useState(JSON.parse(localStorage.getItem('Items')|| '[]').length)
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+  useEffect(() => {  
+     setCounter(counter)
+    const storedUser = localStorage.getItem('user')|| '';
     setUser(storedUser);
-  }, []);
+  },[counter]);
   return (
     <AppBar
       position="sticky"

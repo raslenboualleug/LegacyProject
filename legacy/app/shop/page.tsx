@@ -107,7 +107,6 @@ const Shop = () => {
                       router.push(`/Oneproduct/${prod.id}`);
                     }}
                     isWishlist={false}
-                    isWishlist={false}
                   />
                 </Grid>
               ))}

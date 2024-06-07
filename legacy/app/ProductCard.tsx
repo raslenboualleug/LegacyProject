@@ -36,9 +36,10 @@ interface ProductCardProps {
   product: Product;
   onClick: () => void;
   isWishlist: Boolean;
-  setUpdate: Function;
-  update: Boolean;
+  setUpdate?: Function;
+  update?: Boolean;
 }
+
 
 interface Item extends Product {
   quantity: number;
@@ -50,6 +51,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isWishlist,
   update,
   setUpdate,
+ 
+
 }) => {
   const router = useRouter();
   const [AddToCart, setAddToCart] = useState(false);
@@ -57,13 +60,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [numOfRate, setNumOfRate] = useState(0);
   const [newRate, setNewRate] = useState<GLfloat>(0);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const [counter,setCounter] = useState(localStorage.getItem("counter") || 0)
-
+  const [counter, setCounter] = useState(localStorage.getItem('counter') || 0);
 
   useEffect(() => {
     localStorage.setItem('counter', JSON.stringify(counter));
-  }, [counter]);
 
+  }, [counter]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -72,7 +74,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
       setUserId(decoded.id as number);
     }
   }, []);
-
 
   const MouseHover = () => {
     setAddToCart(!AddToCart);
@@ -113,7 +114,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           userId: userId,
           productId: product.id,
         });
-
 
         Swal.fire({
           icon: 'success',
@@ -178,7 +178,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               (product.rating * product.numOfRating + newRate) / numOfRate,
           })
           .then(() => {
-            setUpdate(!update);
+            setUpdate ? setUpdate(!update) : null
           });
         // setNewRate(rate);
         Swal.fire({
@@ -246,7 +246,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             '&:hover': { backgroundColor: 'black' },
           }}
           disableRipple
-          onClick={(e) => addToCart(e, product)}
+          onClick={(e) =>{addToCart(e, product)} }
         >
           Add to cart <ShoppingCartIcon sx={{ ml: 1 }} />
         </Button>
@@ -270,7 +270,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
               setNumOfRate(numOfRate + 1);
               addRatings(newRate);
               // console.log('target value', parseInt(newRate));
-              console.log('numOfRate', numOfRate, `rating ${product.name}`, newRate);
+              console.log(
+                'numOfRate',
+                numOfRate,
+                `rating ${product.name}`,
+                newRate
+              );
             }
           }}
           // onClick={(e) => {
