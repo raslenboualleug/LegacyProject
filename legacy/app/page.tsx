@@ -1,3 +1,4 @@
+
 "use client";
 import Ourproducts from "./Home/Ourproducts";
 import Categories from "./Home/Categories";
@@ -12,13 +13,14 @@ export default function Home() {
   return (
     <div>
       <Navbar />
-      <Navbanner />
-      <Ourproducts />
+      <Navbanner /> 
+      <Todays />
       <Categories />
       <Thismonth />
+      <Ourproducts />
       <Featured />
-      <Todays />
       <Services />
+      <ScrollToTop />
     </div>
   );
 }

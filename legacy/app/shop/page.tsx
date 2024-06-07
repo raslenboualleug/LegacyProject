@@ -1,12 +1,12 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Button, Stack } from '@mui/material';
-import axios from 'axios';
-import { useSearchParams, useRouter } from 'next/navigation';
-// import { withRouter } from 'next/router';
-import ProductCard from '../ProductCard';
-import Services from '@/services/page';
+"use client";
+import React, { useState, useEffect } from "react";
+import { Box, Grid, Typography, Button, Stack } from "@mui/material";
+import axios from "axios";
 
+import { useSearchParams, useRouter } from "next/navigation";
+import ProductCard from "../ProductCard";
+import Services from "@/services/page";
+import Navbar from "../Navbar";
 interface Product {
   id: number;
   name: string;
@@ -24,12 +24,12 @@ interface Product {
 const categories: string[] = [
   "Women's fashion",
   "Men's fashion",
-  'Electronics',
-  'Home & lifestyle',
-  'Sports & Outdoors',
+  "Electronics",
+  "Home & lifestyle",
+  "Sports & Outdoors",
   "Baby's toys",
-  'Groceries & Pets',
-  'Health & Beauty',
+  "Groceries & Pets",
+  "Health & Beauty",
 ];
 
 const Shop = () => {
@@ -43,17 +43,14 @@ const Shop = () => {
   );
 
   useEffect(() => {
-    console.log(chosen);
-
     if (chosen) {
       axios
         .get(`http://localhost:5000/Client/products/category/${chosen}`)
         .then((response) => {
           setProducts(response.data);
-          console.log(response.data, 'RESPONE HELLO');
         })
         .catch((error) => {
-          console.error('Error fetching products:', error);
+          console.error("Error fetching products:", error);
         });
     }
   }, [chosen,update]);
@@ -64,16 +61,17 @@ const Shop = () => {
 
   return (
     <div>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+      <Navbar />
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Box>
           <Typography
             component="h2"
             sx={{
               marginBottom: 2,
-              fontSize: '2rem',
-              fontWeight: 'bold',
-              textAlign: 'left',
-              marginLeft: '16px',
+              fontSize: "2rem",
+              fontWeight: "bold",
+              textAlign: "left",
+              marginLeft: "16px",
             }}
           >
             Our Shop
@@ -81,15 +79,15 @@ const Shop = () => {
           <Stack
             direction="row"
             spacing={2}
-            sx={{ marginTop: 5, marginBottom: 2, justifyContent: 'center' }}
+            sx={{ marginTop: 5, marginBottom: 2, justifyContent: "center" }}
           >
             {categories.map((cats) => (
               <Button
                 key={cats}
                 variant="contained"
                 style={{
-                  backgroundColor: chosen === cats ? 'darkred' : 'red',
-                  color: 'white',
+                  backgroundColor: chosen === cats ? "darkred" : "red",
+                  color: "white",
                 }}
                 onClick={() => chooseCategory(cats)}
               >
@@ -108,6 +106,7 @@ const Shop = () => {
                     onClick={() => {
                       router.push(`/Oneproduct/${prod.id}`);
                     }}
+                    isWishlist={false}
                     isWishlist={false}
                   />
                 </Grid>

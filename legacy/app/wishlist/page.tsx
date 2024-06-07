@@ -1,105 +1,161 @@
-'use client';
+import React, { useState, useEffect } from "react";
+import { Box, Grid, Typography, Button } from "@mui/material";
+import SquareIcon from '@mui/icons-material/Square';
+import axios from "axios";
+import Link from "next/link";
+import ProductCard from "../ProductCard";
+import { useRouter } from "next/router";
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Grid, Box, Button, Typography } from '@mui/material';
-import ProductCard from '../ProductCard';
-import Navbar from '../Navbar';
-import { jwtDecode } from 'jwt-decode';
-import Link from 'next/link';
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
 
-const Wishlist = () => {
-  const [wishlistItems, setWishlistItems] = useState<any[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [update, setUpdate] = useState(false);
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  stock: number;
+  picture: string;
+  userId: number;
+
+}
+
+const Todays = () => {
+  const router = useRouter();
+
+  const getNextMidnight = () => {
+    const now = new Date();
+    const nextMidnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+      0, 0, 0
+    );
+    return nextMidnight;
+  };
+
+  const calculateTimeLeft = () => {
+    const difference = +getNextMidnight() - +new Date();
+    let timeLeft: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+    if (difference > 0) {
+      timeLeft = {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+
+    return timeLeft;
+  };
+
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decoded = jwtDecode(token) as { id: string };
-      setUserId(decoded.id);
-    }
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    const fetchWishlist = async () => {
-      if (userId) {
-        try {
-          const response = await axios.get<any[]>(
-            `http://localhost:5000/Client/wishlist/${userId}`
-          );
-          setWishlistItems(response.data);
-        } catch (error) {
-          console.error('Error fetching wishlist items', error);
-        }
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get<Product[]>('http://localhost:5000/Client/products/FS');
+        const productsWithDiscounts = response.data.map(product => {
+          const discount = Math.floor(Math.random() * 21) + 10; 
+          const discountedPrice = product.price - (product.price * (discount / 100));
+          return {
+            ...product,
+            discount,
+            discountedPrice: discountedPrice.toFixed(2) 
+          };
+        });
+        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); 
+      } catch (error) {
+        console.error('There was an error fetching the products!', error);
       }
     };
 
-    fetchWishlist();
-  }, [userId]);
+    fetchProducts();
+  }, []); 
 
-  const moveAllToBag = async () => {
-    try {
-      const cartItems = JSON.parse(
-        localStorage.getItem('Items') || '[]'
-      ) as any[];
-      for (const product of wishlistItems) {
-        cartItems.push({
-          ...product,
-          quantity: 1,
-          discountedPrice: product.discountedPrice,
-          discount: product.discount,
-        });
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const nextMidnight = getNextMidnight();
+      if (+new Date() >= +nextMidnight) {
+        axios.get<Product[]>('http://localhost:5000/Client/products/FS')
+          .then(response => {
+            const productsWithDiscounts = response.data.map(product => {
+              const discount = Math.floor(Math.random() * 21) + 10; 
+              const discountedPrice = product.price - (product.price * (discount / 100));
+              return {
+                ...product,
+                discount,
+                discountedPrice: discountedPrice.toFixed(2)
+              };
+            });
+            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); 
+          })
+          .catch(error => {
+            console.error('There was an error fetching the products!', error);
+          });
       }
-      localStorage.setItem('Items', JSON.stringify(cartItems));
-    } catch (error) {
-      console.error('Error moving all items to cart', error);
-    }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const renderTimer = (timeLeft: TimeLeft): JSX.Element => {
+    return (
+      <span>
+        {timeLeft.days}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
+      </span>
+    );
   };
 
   return (
-    <div>
-      <Navbar />
-      <div style={{ width: '90%', margin: '0 auto' }}>
-        <Box sx={{ padding: 3, marginTop: '50px' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 2,
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <h2> My Wishlist</h2>
-            </Box>
-            <Link href="/cart">
-              <Button
-                variant="contained"
-                style={{ color: 'white', backgroundColor: 'red' }}
-                onClick={moveAllToBag}
-              >
-                Move All to Bag
-              </Button>
-            </Link>
-          </Box>
-          <Grid container spacing={3}>
-            {wishlistItems.map((product) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                <ProductCard
-                  update={update}
-                  setUpdate={setUpdate}
-                  product={product}
-                  isWishlist={true}
-                  onClick={() => {}}
-                />
-              </Grid>
-            ))}
+    <Box sx={{ padding: 3, marginTop: "50px" }}>
+      <Typography variant="h5" component="h5" sx={{ color: "red", marginRight: 2, display: "flex", alignItems: "center" }}>
+        <SquareIcon /> Today's
+      </Typography>
+
+      <Typography variant="h4" component="div">
+        {renderTimer(timeLeft)}
+      </Typography>
+      <Grid container spacing={3} sx={{ marginBottom: 3 }}>
+        {products.map((product) => (
+          <Grid item xs={12} sm={6} md={3} key={product.id}>
+            <ProductCard
+              product={product}
+              isWishlist={false} 
+              onClick={() => router.push({
+                pathname: '/oneProduct',
+                query: { productId: product.id }
+              })}
+            />
           </Grid>
-        </Box>
-      </div>
-    </div>
+        ))}
+      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Link href={{
+          pathname: '/shop',
+          query: { productId: products.map(product => product.id) }
+        }}>
+          <Button variant="contained" style={{ color: "white", backgroundColor: "red" }}>
+            View all products
+          </Button>
+        </Link>
+      </Box>
+      <hr />
+    </Box>
   );
 };
 
-export default Wishlist;
+export default Todays;

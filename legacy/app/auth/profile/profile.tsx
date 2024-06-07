@@ -1,11 +1,17 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
-import { Grid, Box, Button } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, Avatar, Divider } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; 
+import OrdersList from './Orders';
+import {jwtDecode} from 'jwt-decode';
+
 import Navbar from '../../Navbar';
+import AddProduct from './AddProduct';
+
 interface User {
-    id : number;
+  id: number;
   userName: string;
   email: string;
   address: string;
@@ -13,17 +19,20 @@ interface User {
 
 const UserProfile: React.FC = () => {
   const [user, setUser] = useState<Partial<User>>({});
+  const [showOrders, setShowOrders] = useState<boolean>(false);
   const router = useRouter();
-  const rolle =  localStorage.getItem('role');
-  const [role, setRole] = useState(JSON.parse(rolle || ""));
+  const [open, setOpen] = useState<boolean>(false);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
+    const storedRole = localStorage.getItem('role');
+    if (storedRole) {
+      setRole(JSON.parse(storedRole));
+    }
     const token = localStorage.getItem('token');
     if (token) {
-      const decoded: any = jwtDecode(token); 
-      console.log(decoded,"lol");
-      const userId: number = decoded.id as number;
-      
+      const decoded: any = jwtDecode(token);
+      const userId: number = decoded.id;
       fetchUser(userId);
     }
   }, []);
@@ -31,7 +40,11 @@ const UserProfile: React.FC = () => {
   const fetchUser = async (userId: number) => {
     try {
       const response = await axios.get(`http://localhost:5000/Client/get/${userId}`);
-      setUser(response.data);
+      if (response.data) {
+        setUser(response.data);
+      } else {
+        console.error('No user data found in response:', response);
+      }
     } catch (error) {
       console.error('Error fetching user information', error);
     }
@@ -39,46 +52,88 @@ const UserProfile: React.FC = () => {
 
   const logOut = () => {
     setUser({});
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+    }
     router.push('/auth/login');
   };
 
   return (
     <div>
-      <Navbar/>
-      <div style={{ width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
-        <Box sx={{ width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <h2>User Profile</h2>
-          </Box>
-          <Box sx={{ mb: 2 }}>
-            <Box>
-              <p><strong>Name:</strong> {user.userName}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Address:</strong> {user.address}</p>
-              <p><strong>Password:</strong> *********</p>
+      <Navbar />
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
+        <Card sx={{ width: '100%', maxWidth: '600px', padding: 3, boxShadow: 3, mb: showOrders ? 3 : 0 }}>
+          <CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Avatar sx={{ width: 56, height: 56, mr: 2 }} />
+              <Box>
+                <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                  {user.userName}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  {user.email}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
-              variant="contained"
-              style={{ color: 'white', backgroundColor: 'blue' }}
-              onClick={() => router.push('/editProfile')}
-            >
-              Modify Info
-            </Button>
-            <Button
-              variant="contained"
-              style={{ color: 'white', backgroundColor: 'red' }}
-              onClick={logOut}
-            >
-              Logout
-            </Button>
-          </Box>
-        </Box>
-      </div>
+            <Divider sx={{ mb: 3 }} />
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              Address:
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              {user.address}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              Password:
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              *********
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+              <Button
+                variant="contained"
+                sx={{ color: 'white', bgcolor: 'black' }}
+                onClick={() => router.push('/auth/editProfile')}
+              >
+                Modify Info
+              </Button>
+              {role === 'Seller' ? (
+                <Button
+                  variant="contained"
+                  sx={{ color: 'white', bgcolor: 'black' }}
+                  onClick={() => setOpen(true)}
+                >
+                  Add Product
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  sx={{ color: 'white', bgcolor: 'black' }}
+                  onClick={() => setShowOrders(!showOrders)}
+                >
+                  {showOrders ? 'Hide Orders' : 'Check Orders'}
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                sx={{ color: 'white', bgcolor: 'red' }}
+                onClick={logOut}
+              >
+                Logout
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+        {showOrders && (
+          <Card sx={{ width: '100%', maxWidth: '600px', padding: 3, boxShadow: 3 }}>
+            <CardContent>
+              <OrdersList />
+            </CardContent>
+          </Card>
+        )}
+      </Box>
+      <AddProduct open={open} setopen={setOpen} />
     </div>
   );
 };

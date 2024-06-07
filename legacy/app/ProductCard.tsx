@@ -146,7 +146,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const removeFromWishlist = async (e: React.MouseEvent, productId: number) => {
     e.stopPropagation();
     try {
-      await axios.post('http://localhost:5000/Client/wishlist/remove', {
+      await axios.delete('http://localhost:5000/Client/wishlist/remove', {
         data: { userId: userId, productId: productId },
       });
       Swal.fire({

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+
 import {
   Badge,
   AppBar,
@@ -9,6 +9,8 @@ import {
   InputBase,
   IconButton,
 } from '@mui/material';
+
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -20,6 +22,10 @@ const Navbar: React.FC = () => {
   const user = localStorage.getItem('user');
   const counter = localStorage.getItem('counter');
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    setUser(storedUser);
+  }, []);
   return (
     <AppBar
       position="sticky"
@@ -78,17 +84,20 @@ const Navbar: React.FC = () => {
               <FavoriteBorderIcon />
             </IconButton>
           </Link>
-
+          <Link href='/cart'  style={{textDecoration:"none",color:"black"}}>
           <IconButton color="inherit">
             
             <Badge badgeContent={counter} color="primary">
             <ShoppingCartIcon />
             </Badge>
           </IconButton>
+          </Link>
           {user && (
+            <Link href='/auth/profile'  style={{textDecoration:"none",color:"black"}}>
             <IconButton color="inherit">
               <AccountCircleIcon />
             </IconButton>
+            </Link>
           )}
         </Box>
       </Toolbar>
