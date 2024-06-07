@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import ClientsTable from "./clientsTable";
-// import ProductsTable from "./productsTable";
-// import Sellers from "./Sellers";  
-// import NavAdmin from "./NavAdmin";
+import ProductsTable from "./products";
+import Sellers from "./sellers";  
+ 
 import SideBar from "./sideBar";
 import OrdersTable from "./ordersTable";
 
@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      {/* <NavAdmin /> */}
+    
       <Box sx={{ display: 'flex' }}>
         <SideBar
           onProductsClick={() => seperateModule("products")}
@@ -63,8 +63,8 @@ const Dashboard: React.FC = () => {
           </Card>
           <Box sx={{ marginTop: "20px" }}>
             {showClients && <ClientsTable />}
-            {/* {showProducts && <ProductsTable />} */}
-            {/* {showSellers && <Sellers />} */}
+            {showProducts && <ProductsTable />}
+            {showSellers && <Sellers />}
             {showOrders && <OrdersTable />} 
           </Box>
         </Box>

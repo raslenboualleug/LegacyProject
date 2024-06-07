@@ -7,7 +7,7 @@ import Services from "./Services";
 import Featured from "./Home/Featured";
 import Todays from "./Home/Todays";
 import Navbar from "./Navbar";
-import Navbanner from "./Navbar";
+import Navbanner from "./Home/Navbanner";
 import ScrollToTop from "./ScorllToTop";
 
 
