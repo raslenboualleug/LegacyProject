@@ -1,19 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, Grid, IconButton, CssBaseline, Toolbar } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import ClientsTable from "./clientsTable";
 import ProductsTable from "./products";
-import Sellers from "./sellers";  
- 
+import Sellers from "./sellers";
+import Charts from "./chart";
 import SideBar from "./sideBar";
 import OrdersTable from "./ordersTable";
+import Extra from "./extra";
 
 const Dashboard: React.FC = () => {
   const [showClients, setShowClients] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
   const [showSellers, setShowSellers] = useState(false);
   const [showOrders, setShowOrders] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const seperateModule = (module: string) => {
     setShowClients(module === "clients");
@@ -43,33 +50,43 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div>
-    
-      <Box sx={{ display: 'flex' }}>
-        <SideBar
-          onProductsClick={() => seperateModule("products")}
-          onClientsClick={() => seperateModule("clients")}
-          onSellersClick={() => seperateModule("sellers")}
-          onOrdersClick={() => seperateModule("orders")} 
-          onLogout={()=>{}}
-        />
-        <Box sx={{ flexGrow: 1, padding: "20px" }}>
-          <Card sx={headerStyle}>
-            <CardContent>
-              <Typography variant="h4" component="h1">
-                Dashboard
-              </Typography>
-            </CardContent>
-          </Card>
-          <Box sx={{ marginTop: "20px" }}>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <SideBar
+        isOpen={isSidebarOpen}
+        onProductsClick={() => seperateModule("products")}
+        onClientsClick={() => seperateModule("clients")}
+        onSellersClick={() => seperateModule("sellers")}
+        onOrdersClick={() => seperateModule("orders")}
+        onLogout={() => {}}
+      />
+      <Box sx={{ flexGrow: 1, padding: "5px" ,marginTop:"-60px"}}>
+        <Card sx={headerStyle}>
+          <CardContent>
+            <Typography variant="h4" component="h1">
+              Dashboard
+            </Typography>
+            <Extra/>
+        <Toolbar>
+          <IconButton onClick={toggleSidebar} sx={{ color: '#000' }}>
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+          </CardContent>
+        </Card>
+        <Grid container spacing={3} sx={{ marginTop: "20px" }}>
+          <Grid item xs={12} md={6}>
             {showClients && <ClientsTable />}
             {showProducts && <ProductsTable />}
             {showSellers && <Sellers />}
-            {showOrders && <OrdersTable />} 
-          </Box>
-        </Box>
+            {showOrders && <OrdersTable />}
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Charts />
+          </Grid>
+        </Grid>
       </Box>
-    </div>
+    </Box>
   );
 };
 

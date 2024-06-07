@@ -15,8 +15,8 @@ interface Client {
 const styles = {
   header: {
     textAlign: 'center',
-    backgroundColor: '#0a0a0a',
-    color: '#e0e1dd',
+   
+    color: 'black',
     padding: '10px',
     borderRadius: '8px',
     marginBottom: '20px',
@@ -26,9 +26,10 @@ const styles = {
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#f5f5f5',
   },
   tableHeadRow: {
-    backgroundColor: '#f44336',
+    backgroundColor: 'bluergb(139, 223, 235)',
   },
   tableHeadCell: {
     color: '#ffffff',
@@ -43,11 +44,12 @@ const styles = {
     color: '#d32f2f',
   },
   switchButton: {
-    color: '#d32f2f',
-    backgroundColor: 'transparent',
+    color: '#ffffff',
+    backgroundColor: '#0a0a0a',
     '&:hover': {
-      backgroundColor: 'transparent',
+      backgroundColor: '#333333',
     },
+    marginLeft: '10px',
   },
 };
 
@@ -92,9 +94,9 @@ const ClientsTable: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <Typography variant="h3" gutterBottom sx={styles.header}>
-        Clients
-      </Typography>
+    <Typography variant="h4" component="h1">
+              Clients
+            </Typography>
       <Paper sx={styles.paper}>
         <Table>
           <TableHead>

@@ -1,12 +1,15 @@
 "use client";
 
 import React from "react";
-import { List, ListItem, Button, Box } from "@mui/material";
-
-import { useRouter } from "next/navigation";
-
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Toolbar, Typography } from "@mui/material";
+import InboxIcon from "@mui/icons-material/Inbox";
+import PeopleIcon from "@mui/icons-material/People";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import StoreIcon from "@mui/icons-material/Store";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 interface SideBarProps {
+  isOpen: boolean;
   onProductsClick: () => void;
   onClientsClick: () => void;
   onSellersClick: () => void;
@@ -14,58 +17,53 @@ interface SideBarProps {
   onLogout: () => void;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ onProductsClick, onClientsClick, onSellersClick, onOrdersClick, onLogout }) => {
-  const router = useRouter();
-
-  const buttonStyle = {
-    marginBottom: "20px",
-    backgroundColor: "red",
-    width: "100%",
-    color: "black",
-    fontWeight: "bold",
-    textTransform: "none",
-    borderRadius: "8px",
-    '&:hover': {
-      backgroundColor: "#f5f5f5",
-    },
-  };
-
-  const logOut = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    router.push('/login');
-  };
-
+const SideBar: React.FC<SideBarProps> = ({ isOpen, onProductsClick, onClientsClick, onSellersClick, onOrdersClick, onLogout }) => {
   return (
-    <Box sx={{ padding: "20px", backgroundColor: "#f5f5f5", height: "100vh", boxShadow: "2px 0px 5px rgba(0, 0, 0, 0.1)" }}>
-      <List style={{ marginTop: "20px", color: "black" }}>
-        <ListItem>
-          <Button variant="contained" sx={buttonStyle} onClick={onProductsClick}>
-            Products
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button variant="contained" sx={buttonStyle} onClick={onClientsClick}>
-            Clients
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button variant="contained" sx={buttonStyle} onClick={onSellersClick}>
-            Sellers
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button variant="contained" sx={buttonStyle} onClick={onOrdersClick}>
-            Orders
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button variant="contained" color="secondary" onClick={logOut} sx={buttonStyle}>
-            Logout
-          </Button>
-        </ListItem>
-      </List>
+    <Box sx={{ display: 'flex' }}>
+      <Drawer
+        variant="persistent"
+        open={isOpen}
+        sx={{
+          width: 240,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: 240,
+            boxSizing: 'border-box',
+            backgroundColor: "#263238",
+            color: "#fff",
+          },
+        }}
+      >
+        <Toolbar>
+          <Typography variant="h6" noWrap sx={{ color: '#fff' }}>
+            Menu
+          </Typography>
+        </Toolbar>
+        <List>
+          <ListItem button onClick={onClientsClick}>
+            <ListItemIcon sx={{ color: '#fff' }}><PeopleIcon /></ListItemIcon>
+            <ListItemText primary="Clients" />
+          </ListItem>
+          <ListItem button onClick={onProductsClick}>
+            <ListItemIcon sx={{ color: '#fff' }}><ShoppingCartIcon /></ListItemIcon>
+            <ListItemText primary="Products" />
+          </ListItem>
+          <ListItem button onClick={onSellersClick}>
+            <ListItemIcon sx={{ color: '#fff' }}><StoreIcon /></ListItemIcon>
+            <ListItemText primary="Sellers" />
+          </ListItem>
+          <ListItem button onClick={onOrdersClick}>
+            <ListItemIcon sx={{ color: '#fff' }}><InboxIcon /></ListItemIcon>
+            <ListItemText primary="Orders" />
+          </ListItem>
+        </List>
+        <List>
+          <ListItem button onClick={onLogout}>
+            <ListItemIcon sx={{ color: '#fff' }}><ExitToAppIcon /></ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </List>
+      </Drawer>
     </Box>
   );
 };
