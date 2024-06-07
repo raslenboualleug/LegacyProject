@@ -27,7 +27,7 @@ router.get('/get/:userId',User.getOneUser)
 router.get('/:userName',User.getByUsername)
 router.put('/up/:userId',User.updateUser)
 
-router.post('/signup', validiSeller, signUp);
+router.post('/signup', signUp);
 router.post('/login', logIn);
 
 module.exports = router;

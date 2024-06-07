@@ -34,21 +34,7 @@ const Services :React.FC= () => {
           </Grid>
         </Grid>
       </Box>
-      <ArrowCircleUpOutlinedIcon
-        variant="contained"
-        color="inherit"
-        onClick={scrollToTop}
-        style={{
-          marginBottom:"50px",
-          bottom: "20px",
-          right: "20px",
-          float:"right",
-          fontSize:"50px"
-        }}
-        startIcon={<KeyboardArrowUpIcon />}
-      >
-       
-      </ArrowCircleUpOutlinedIcon>
+    
     </div>
   );
 };

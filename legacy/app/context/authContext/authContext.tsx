@@ -17,6 +17,7 @@ interface LoginData {
   password: string;
   email: string;
   role: string;
+  address : string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

@@ -3,7 +3,9 @@ import { Box, Grid, Typography, Button } from "@mui/material";
 import SquareIcon from '@mui/icons-material/Square';
 import axios from "axios";
 import Link from "next/link"
+import ProductCard from "../ProductCard";
 
+import {useRouter} from 'next/navigation'
 interface Product{
     id:number,
     name:string,
@@ -16,8 +18,7 @@ interface Product{
 
 const Todays = () => {
 
-  
-  // Function to get midnight of the next day
+  const router=useRouter()
   const getNextMidnight = () => {
     const now = new Date();
     const nextMidnight = new Date(
@@ -60,41 +61,40 @@ const Todays = () => {
       try {
         const response = await axios.get<Product[]>('http://localhost:5000/Client/products/FS');
         const productsWithDiscounts = response.data.map(product => {
-          const discount = Math.floor(Math.random() * 21) + 10; // Random discount between 10% and 30%
+          const discount = Math.floor(Math.random() * 21) + 10;
           const discountedPrice = product.price - (product.price * (discount / 100));
           return {
             ...product,
             discount,
-            discountedPrice: discountedPrice.toFixed(2) // Round to 2 decimal places
+            discountedPrice: discountedPrice.toFixed(2)
           };
         });
-        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
+        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); 
       } catch (error) {
         console.error('There was an error fetching the products!', error);
       }
     };
 
     fetchProducts();
-  }, []); // Fetch products on component mount
+  }, []); 
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const nextMidnight = getNextMidnight();
       if (+new Date() >= +nextMidnight) {
-        // Fetch new products when the time is midnight
+       
         axios.get<Product[]>('http://localhost:5000/Client/products/FS')
           .then(response => {
             const productsWithDiscounts = response.data.map(product => {
-              const discount = Math.floor(Math.random() * 21) + 10; // Random discount between 10% and 30%
+              const discount = Math.floor(Math.random() * 21) + 10;
               const discountedPrice = product.price - (product.price * (discount / 100));
               return {
                 ...product,
                 discount,
-                discountedPrice: discountedPrice.toFixed(2) // Round to 2 decimal places
+                discountedPrice: discountedPrice.toFixed(2)
               };
             });
-            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
-          })
+            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8))})
           .catch(error => {
             console.error('There was an error fetching the products!', error);
           });
@@ -104,13 +104,13 @@ const Todays = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-//   const renderTimer = () => {
-//     return (
-//       <span>
-//         {timeLeft.days}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
-//       </span>
-//     );
-//   };
+  // const renderTimer = () => {
+  //   return (
+  //     <span>
+  //       {timeLeft.days:number}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
+  //     </span>
+  //   );
+  // };
 
   return (
     <Box sx={{ padding: 3, marginTop: "50px" }}>
@@ -125,10 +125,11 @@ const Todays = () => {
       <Grid container spacing={3} sx={{ marginBottom: 3 }}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={3} key={product.id}>
-            {/* <ProductCard
+            <ProductCard
               product={product}
-              onClick={() => navigate('/oneProduct', { state: { productId: product.id } })}
-            /> */}
+               onClick={() =>{ router.push(`/Oneproduct/${product.id}`)}  }
+              isWishlist={false}
+            />
           </Grid>
         ))}
       </Grid>
