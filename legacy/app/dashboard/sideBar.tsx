@@ -34,7 +34,7 @@ const SideBar: React.FC<SideBarProps> = ({ onProductsClick, onClientsClick, onSe
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    router.push('/login');
+    router.push('/auth/login');
   };
 
   return (
