@@ -12,9 +12,6 @@ import ScrollToTop from "./ScorllToTop";
 
 export default function Home() {
 
-
-
-  
   return (
     <div>
       <Navbar   />

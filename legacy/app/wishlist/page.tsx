@@ -13,6 +13,7 @@ const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");

@@ -17,7 +17,7 @@ const EditProfile: React.FC = () => {
   const [message, setMessage] = useState('');
   const { user, updateUser } = useProfile();
   const router = useRouter();
-  const role =JSON.parse(localStorage.getItem('role')||'')
+  const role =localStorage.getItem('role')||''
 
   
   useEffect(() => {
