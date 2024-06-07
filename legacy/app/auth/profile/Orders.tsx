@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardContent, Typography, List, ListItem } from '@mui/material';
+import { Box, Card, CardContent, Typography, List, ListItem, Avatar, Grid } from '@mui/material';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,8 @@ interface Order {
 interface Product {
     id: number;
     name: string;
+    price: number;
+    image: string;
 }
 
 const OrdersList: React.FC = () => {
@@ -63,26 +65,52 @@ const OrdersList: React.FC = () => {
         return product ? product.name : undefined;
     };
 
+    const prodImages = (id: number): string | undefined => {
+        const product = products.find(prod => prod.id === id);
+        return product ? product.image : undefined;
+    };
+
+    const prodPrices = (id: number): number | undefined => {
+        const product = products.find(prod => prod.id === id);
+        return product ? product.price : undefined;
+    };
+
     return (
         <Box sx={{ width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h4">My Orders List</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h4" sx={{ textAlign: 'center' }}>My Orders List</Typography>
             </Box>
             <List>
                 {orders.map(order => (
-                    <ListItem key={order.id}>
-                        <Card sx={{ width: '100%', mb: 2 }}>
+                    <ListItem key={order.id} sx={{ padding: 0 }}>
+                        <Card sx={{ width: '100%', mb: 2, padding: 2 }}>
                             <CardContent>
                                 <Typography variant="h6" gutterBottom>
                                     Order ID: {order.id}
                                 </Typography>
-                                <Typography variant="body1" gutterBottom>
-                                    Products: {JSON.parse(order.products).map((product: [number, number]) => prodNames(product[0])).join(', ')}
-                                </Typography>
+                                <Grid container spacing={2}>
+                                    {JSON.parse(order.products).map((product: [number, number]) => {
+                                        const productId = product[0];
+                                        const quantity = product[1];
+                                        const price = prodPrices(productId);
+                                        const subtotal = price ? price * quantity : 0;
+                                        return (
+                                            <Grid item xs={12} key={productId} sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <Avatar src={prodImages(productId)} alt={prodNames(productId)} sx={{ width: 56, height: 56, mr: 2 }} />
+                                                <Box sx={{ flexGrow: 1 }}>
+                                                    <Typography variant="body1">{prodNames(productId)}</Typography>
+                                                    <Typography variant="body2">Quantity: {quantity}</Typography>
+                                                    <Typography variant="body2">Price: ${price}</Typography>
+                                                    <Typography variant="body2">Subtotal: ${subtotal}</Typography>
+                                                </Box>
+                                            </Grid>
+                                        );
+                                    })}
+                                </Grid>
                                 <Typography variant="body1" gutterBottom>
                                     Status: {order.status}
                                 </Typography>
-                                <Typography variant="body1">
+                                <Typography variant="h6">
                                     Total: ${order.totalAmount}
                                 </Typography>
                             </CardContent>

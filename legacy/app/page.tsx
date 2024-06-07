@@ -1,13 +1,13 @@
 
 "use client";
-import Ourproducts from "./AddProduct";
-import Categories from "./Home/Categories";
-import Thismonth from "./Home/Thismonth";
+import Ourproducts from "./home/Ourproducts";
+import Categories from "./home/Categories";
+import Thismonth from "./home/Thismonth";
 import Services from "./Services";
-import Featured from "./Home/Featured";
-import Todays from "./Home/Todays";
+import Featured from "./home/Featured";
+import Todays from "./home/Todays";
 import Navbar from "./Navbar";
-import Navbanner from "./Home/Navbanner";
+import Navbanner from "./home/Navbanner";
 import ScrollToTop from "./ScorllToTop";
 
 

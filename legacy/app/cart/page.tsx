@@ -140,6 +140,7 @@ const Cart: React.FC = () => {
   const coupon = () => {
     if (couponCode === 'EXCLUSIVE2024') {
       setDiscount(0.2);
+      Swal.fire("coupon applied","20% reduction applied",'success')
     } else {
       setDiscount(0);
       Swal.fire('Invalid Coupon', 'The coupon code you entered is not valid.', 'error');
