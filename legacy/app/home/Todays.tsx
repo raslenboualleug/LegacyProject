@@ -19,12 +19,15 @@ interface TimeLeft {
 interface Product {
   id: number;
   name: string;
-  price: number;
-  category: string;
-  stock: number;
   picture: string;
+  price: number;
+  discountedPrice?: number;
+  discount?: number;
+  stock: number;
   userId: number;
- 
+  rating: GLfloat;
+  numOfRating: number;
+  // quantity: number;
 }
 
 const Todays = () => {

@@ -1,6 +1,7 @@
 
 "use client";
-import Ourproducts from "./AddProduct";
+import React, {useState} from "react";
+import Ourproducts from "./Home/Ourproducts";
 import Categories from "./Home/Categories";
 import Thismonth from "./Home/Thismonth";
 import Services from "./Services";
@@ -10,11 +11,15 @@ import Navbar from "./Navbar";
 import Navbanner from "./Home/Navbanner";
 import ScrollToTop from "./ScorllToTop";
 
-
 export default function Home() {
+
+  const [notif , setNotif] = useState<number>(0)
+
+
+  
   return (
     <div>
-      <Navbar />
+      <Navbar   />
       <Navbanner /> 
       <Todays />
       <Categories />
