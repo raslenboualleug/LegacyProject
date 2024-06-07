@@ -21,9 +21,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import router from 'next/navigation'
 import {jwtDecode} from 'jwt-decode';
-import next from 'next';
+import Navbar from '../Navbar';
 
 interface Item {
   id: number;
@@ -163,6 +162,7 @@ const Cart: React.FC = () => {
 
   return (
     <div>
+      <Navbar/>
       <Container sx={{ mt: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           <b>Cart</b>
