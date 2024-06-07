@@ -17,6 +17,8 @@ interface Product {
   userId: number;
   discountedPrice?: number;
   discount?: number;
+  rating: number;
+  numOfRating:number
 }
 
 const categories: string[] = [
@@ -32,9 +34,13 @@ const categories: string[] = [
 
 const Shop = () => {
   const search = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [chosen, setChosen] = useState<string>(search.get("category") || "Women's fashion");
   const router = useRouter();
+  const [update,setUpdate]= useState<Boolean>(false)
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [chosen, setChosen] = useState<string>(
+    search.get('category') || "Women's fashion"
+  );
 
   useEffect(() => {
     if (chosen) {
@@ -47,7 +53,7 @@ const Shop = () => {
           console.error("Error fetching products:", error);
         });
     }
-  }, [chosen]);
+  }, [chosen,update]);
 
   const chooseCategory = (newCategory: string) => {
     setChosen(newCategory);
@@ -94,10 +100,11 @@ const Shop = () => {
               {products.map((prod) => (
                 <Grid key={prod.id} item xs={12} sm={6} md={4} lg={3}>
                   <ProductCard
+                  update={update}
+                  setUpdate={setUpdate}
                     product={prod}
                     onClick={() => {
-                      router.push(`/Oneproduct/${prod.id}`)
-                       
+                      router.push(`/Oneproduct/${prod.id}`);
                     }}
                     isWishlist={false}
                   />

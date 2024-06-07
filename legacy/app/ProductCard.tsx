@@ -11,11 +11,13 @@ import {
   Button,
   IconButton,
   Box,
+  Rating,
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import { useRouter } from 'next/navigation';
+import Shop from './shop/page';
 interface Product {
   id: number;
   name: string;
@@ -25,6 +27,8 @@ interface Product {
   discount?: number;
   stock: number;
   userId: number;
+  rating: GLfloat;
+  numOfRating: number;
   // quantity: number;
 }
 
@@ -32,7 +36,10 @@ interface ProductCardProps {
   product: Product;
   onClick: () => void;
   isWishlist: Boolean;
+  setUpdate?: Function;
+  update?: Boolean;
 }
+
 
 interface Item extends Product {
   quantity: number;
@@ -42,16 +49,29 @@ const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onClick,
   isWishlist,
+  update,
+  setUpdate,
+ 
+
 }) => {
+  const router = useRouter();
   const [AddToCart, setAddToCart] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
+  const [numOfRate, setNumOfRate] = useState(0);
+  const [newRate, setNewRate] = useState<GLfloat>(0);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const [counter, setCounter] = useState(localStorage.getItem('counter') || 0);
+
+  useEffect(() => {
+    localStorage.setItem('counter', JSON.stringify(counter));
+
+  }, [counter]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decoded: any = jwtDecode(token);
-      setUserId(decoded.id);
+      setUserId(decoded.id as number);
     }
   }, []);
 
@@ -63,8 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.stopPropagation();
     if (user) {
       let cartItems: Item[] = JSON.parse(localStorage.getItem('Items') || '[]');
-      console.log(cartItems);
-      
+      setCounter(cartItems.length)
       const existingItem = cartItems.find((item) => item.id === product.id);
       if (existingItem) {
         existingItem.quantity += 1;
@@ -88,6 +107,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const addToWishlist = async (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
     if (user) {
+      console.log('userId:', userId);
+      console.log('product.id:', product.id);
       try {
         await axios.post('http://localhost:5000/Client/wishlist/add', {
           userId: userId,
@@ -119,7 +140,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           timer: 1500,
         });
       }
-    }
+    } else router.push('/signup');
   };
 
   const removeFromWishlist = async (e: React.MouseEvent, productId: number) => {
@@ -145,6 +166,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
         timer: 1500,
       });
     }
+  };
+
+  const addRatings = async (rate: number) => {
+    const productId: number = product.id;
+    if (user) {
+      try {
+        await axios
+          .put(`http://localhost:5000/Client/rati/${productId}`, {
+            rating:
+              (product.rating * product.numOfRating + newRate) / numOfRate,
+          })
+          .then(() => {
+            setUpdate ? setUpdate(!update) : null
+          });
+        // setNewRate(rate);
+        Swal.fire({
+          icon: 'success',
+          title: 'rating updated',
+          text: `${product.name} ${rate} stars !!`,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      } catch (error) {
+        console.error('Error updating rating:', error);
+      }
+    } else router.push('/signup');
   };
 
   return (
@@ -199,7 +246,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             '&:hover': { backgroundColor: 'black' },
           }}
           disableRipple
-          onClick={(e) => addToCart(e, product)}
+          onClick={(e) =>{addToCart(e, product)} }
         >
           Add to cart <ShoppingCartIcon sx={{ ml: 1 }} />
         </Button>
@@ -208,6 +255,41 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Typography variant="h6" component="div" sx={{ mb: 1 }}>
           {product.name}
         </Typography>
+
+        <Rating
+          name="unique-rating"
+          defaultValue={product.rating}
+          precision={0.5}
+          max={5}
+          value={product.rating}
+          onClick={(e) => {
+            e.stopPropagation();
+            const value = (e.target as HTMLInputElement).value;
+            if (value) setNewRate(parseInt(value));
+            if (newRate !== 0) {
+              setNumOfRate(numOfRate + 1);
+              addRatings(newRate);
+              // console.log('target value', parseInt(newRate));
+              console.log(
+                'numOfRate',
+                numOfRate,
+                `rating ${product.name}`,
+                newRate
+              );
+            }
+          }}
+          // onClick={(e) => {
+
+          //   e.stopPropagation();
+          //   if (newRate !== null) {
+          //     setNumOfRate(numOfRate + 1);
+          //     addRatings(e, newRate);
+          //   console.log('numOfRate', numOfRate, 'newrate', newRate);
+          //   }
+          // }}
+        ></Rating>
+        <Typography>{product.numOfRating}</Typography>
+
         {product.discount ? (
           <>
             <Typography

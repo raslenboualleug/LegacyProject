@@ -88,10 +88,47 @@ const Wishlist = () => {
             {wishlistItems.map((product) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
                <ProductCard
+    <div>
+      <Navbar />
+      <div style={{ width: "90%", margin: "0 auto" }}>
+        <Box sx={{ padding: 3, marginTop: "50px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            <Box sx={{ flexGrow: 1 }}>
+            <h2> My   Wishlist</h2>
+
+            </Box>
+            <Link  href="/cart">
+            <Button
+              variant="contained"
+              style={{ color: "white", backgroundColor: "red" }}
+              onClick={moveAllToBag}
+            >
+              Move All to Bag
+            </Button>
+            </Link>
+          </Box>
+          <Grid container spacing={3}>
+            {wishlistItems.map((product) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+               <ProductCard
               product={product}
               isWishlist={true} 
               onClick={() => router.push(`/Oneproduct/${product.id}`)}
             />
+
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </div>
+    </div>
 
               </Grid>
             ))}
