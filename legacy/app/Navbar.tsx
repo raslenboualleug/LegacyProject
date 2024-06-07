@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
           </IconButton>
           </Link>
           {user && (
-            <Link href='/profile'  style={{textDecoration:"none",color:"black"}}>
+            <Link href='/auth/profile'  style={{textDecoration:"none",color:"black"}}>
             <IconButton color="inherit">
               <AccountCircleIcon />
             </IconButton>
