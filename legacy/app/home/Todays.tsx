@@ -1,24 +1,35 @@
+
+"use client"
+
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import SquareIcon from '@mui/icons-material/Square';
 import axios from "axios";
-import Link from "next/link"
+import Link from "next/link";
 import ProductCard from "../ProductCard";
+import { useRouter } from "next/navigation";
 
-import {useRouter} from 'next/navigation'
-interface Product{
-    id:number,
-    name:string,
-    price:number,
-    category:string,
-    stock:number,
-    picture:string,
-    userId:number
- }
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  stock: number;
+  picture: string;
+  userId: number;
+ 
+}
 
 const Todays = () => {
+  const router = useRouter();
 
-  const router=useRouter()
   const getNextMidnight = () => {
     const now = new Date();
     const nextMidnight = new Date(
@@ -32,7 +43,7 @@ const Todays = () => {
 
   const calculateTimeLeft = () => {
     const difference = +getNextMidnight() - +new Date();
-    let timeLeft = {};
+    let timeLeft: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
     if (difference > 0) {
       timeLeft = {
@@ -46,7 +57,7 @@ const Todays = () => {
     return timeLeft;
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -61,40 +72,41 @@ const Todays = () => {
       try {
         const response = await axios.get<Product[]>('http://localhost:5000/Client/products/FS');
         const productsWithDiscounts = response.data.map(product => {
-          const discount = Math.floor(Math.random() * 21) + 10;
+          const discount = Math.floor(Math.random() * 21) + 10; // Random discount between 10% and 30%
           const discountedPrice = product.price - (product.price * (discount / 100));
           return {
             ...product,
             discount,
-            discountedPrice: discountedPrice.toFixed(2)
+            discountedPrice: Number(discountedPrice.toFixed(2)) // Convert to number
           };
         });
-        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); 
+        setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
       } catch (error) {
         console.error('There was an error fetching the products!', error);
       }
     };
 
     fetchProducts();
-  }, []); 
+  }, []); // Fetch products on component mount
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const nextMidnight = getNextMidnight();
       if (+new Date() >= +nextMidnight) {
-       
+        // Fetch new products when the time is midnight
         axios.get<Product[]>('http://localhost:5000/Client/products/FS')
           .then(response => {
             const productsWithDiscounts = response.data.map(product => {
-              const discount = Math.floor(Math.random() * 21) + 10;
+              const discount = Math.floor(Math.random() * 21) + 10; // Random discount between 10% and 30%
               const discountedPrice = product.price - (product.price * (discount / 100));
               return {
                 ...product,
                 discount,
-                discountedPrice: discountedPrice.toFixed(2)
+                discountedPrice: Number(discountedPrice.toFixed(2)) // Convert to number
               };
             });
-            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8))})
+            setProducts(productsWithDiscounts.sort(() => 0.5 - Math.random()).slice(0, 8)); // Select random products
+          })
           .catch(error => {
             console.error('There was an error fetching the products!', error);
           });
@@ -104,13 +116,13 @@ const Todays = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // const renderTimer = () => {
-  //   return (
-  //     <span>
-  //       {timeLeft.days:number}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
-  //     </span>
-  //   );
-  // };
+  const renderTimer = (timeLeft: TimeLeft): JSX.Element => {
+    return (
+      <span>
+        {timeLeft.days}d :{timeLeft.hours}h :{timeLeft.minutes}m :{timeLeft.seconds}s
+      </span>
+    );
+  };
 
   return (
     <Box sx={{ padding: 3, marginTop: "50px" }}>
@@ -119,13 +131,12 @@ const Todays = () => {
       </Typography>
 
       <Typography variant="h4" component="div">
-        {/* Flash Sales {renderTimer()} */}
+        {renderTimer(timeLeft)}
       </Typography>
-
       <Grid container spacing={3} sx={{ marginBottom: 3 }}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={3} key={product.id}>
-            <ProductCard
+           <ProductCard
               product={product}
                onClick={() =>{ router.push(`/Oneproduct/${product.id}`)}  }
               isWishlist={false}
@@ -134,10 +145,13 @@ const Todays = () => {
         ))}
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-      <Link href={{ pathname: '/shop', query: { productId: products .map(product=>product.id)} }} >
-        <Button variant="contained" style={{ color: "white", backgroundColor: "red" }} >
-          View all products
-        </Button>
+        <Link href={{
+          pathname: '/shop',
+          query: { productId: products.map(product => product.id) }
+        }}>
+          <Button variant="contained" style={{ color: "white", backgroundColor: "red" }}>
+            View all products
+          </Button>
         </Link>
       </Box>
       <hr />
