@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useContext, createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
@@ -7,9 +7,11 @@ import {jwtDecode} from "jwt-decode";
 
 interface AuthContextType {
   token: string;
+  setToken: Function;
   user: any;
   loginAction: (data: LoginData, str: string) => Promise<void>;
   logOut: () => void;
+  fetchUser: (userId: number) => Promise<void>;
 }
 
 interface LoginData {
@@ -17,7 +19,6 @@ interface LoginData {
   password: string;
   email: string;
   role: string;
-  address : string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,14 +47,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        fetchUser(decoded.id);
+        if (decoded && decoded.id) {
+          fetchUser(decoded.id);
+        }
       } catch (error) {
         console.error("Error decoding token:", error);
       }
     }
   }, []);
 
-  const fetchUser = async (userId: string) => {
+  const fetchUser = async (userId: number) => {
     try {
       const response = await axios.get(`http://localhost:5000/Client/get/${userId}`);
       setUser(response.data);
@@ -67,13 +70,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await axios.post(`http://localhost:5000/${data.role}/${str}`, data);
       const userData = response.data.data;
-        console.log(response.data)
-      setUser(userData.userName);
-      localStorage.setItem("user", JSON.stringify(userData.userName));
+      console.log(response.data);
+
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
       setToken(response.data.token);
       localStorage.setItem("token", response.data.token);
       setRole(userData.role);
-      localStorage.setItem("role", JSON.stringify(userData.role));
+      localStorage.setItem("role", userData.role);
 
       if (userData.role === "admin") {
         router.push('/dashboard');
@@ -100,7 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContext.Provider value={{ token,setToken, user, loginAction, fetchUser, logOut }}>
       {children}
     </AuthContext.Provider>
   );
