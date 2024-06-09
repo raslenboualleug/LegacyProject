@@ -120,14 +120,7 @@ const Signup: React.FC = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       sx={{ marginBottom: 2 }}
                     />
-                    <TextField
-                      fullWidth
-                      label="Address" // Added address input field
-                      variant="outlined"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      sx={{ marginBottom: 2 }}
-                    />
+                  
                     <FormControl
                       fullWidth
                       variant="outlined"

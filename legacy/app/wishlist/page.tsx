@@ -8,6 +8,10 @@ import Navbar from "../Navbar";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1fed72e60f8d3ff3b8d6a46d9e4bb44b0b3c0b46
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
@@ -35,7 +39,11 @@ const Wishlist = () => {
     };
 
     fetchWishlist();
+<<<<<<< HEAD
   }, [userId, wishlistItems]);
+=======
+  }, [userId]);
+>>>>>>> 1fed72e60f8d3ff3b8d6a46d9e4bb44b0b3c0b46
 
   const moveAllToBag = async () => {
     try {

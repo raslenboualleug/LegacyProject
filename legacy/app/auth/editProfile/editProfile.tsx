@@ -17,7 +17,9 @@ const EditProfile: React.FC = () => {
   const [message, setMessage] = useState('');
   const { user, updateUser } = useProfile();
   const router = useRouter();
-
+  const role =localStorage.getItem('role')
+  console.log(role);
+  
   useEffect(() => {
     if (user) {
       setUsername(user.userName || '');
@@ -33,7 +35,8 @@ const EditProfile: React.FC = () => {
       return;
     }
     try {
-      await updateUser(user.id, { 
+      if(user){
+        await updateUser(user.id, { 
         userName: username,
         email: email,
         address: address,
@@ -41,12 +44,14 @@ const EditProfile: React.FC = () => {
         ...(newPassword && { newPassword }),
       });
       setMessage('Profile updated successfully!');
-      router.push('/profile');
+      router.push('/auth/profile');
       Swal.fire({
         icon: 'success',
         title: 'Profile Updated',
         text: 'Your profile has been successfully updated.',
       });
+      }
+      
     } catch (error) {
       setMessage('Profile update failed. Please try again.');
       Swal.fire({
@@ -103,6 +108,7 @@ const EditProfile: React.FC = () => {
                       />
                     </Grid>
                     <Grid item xs={12}>
+                    {role === "Client" &&
                       <TextField
                         fullWidth
                         label="Address"
@@ -110,7 +116,7 @@ const EditProfile: React.FC = () => {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         sx={{ marginBottom: 2 }}
-                      />
+                      />}
                     </Grid>
                     <Grid item xs={12}>
                       <Typography variant="subtitle1">

@@ -1,71 +1,143 @@
 "use client";
 
-import React from "react";
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Toolbar, Typography } from "@mui/material";
-import InboxIcon from "@mui/icons-material/Inbox";
-import PeopleIcon from "@mui/icons-material/People";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import StoreIcon from "@mui/icons-material/Store";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Typography, Table, TableHead, TableBody, TableRow, TableCell, Paper, IconButton, Button } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-interface SideBarProps {
-  isOpen: boolean;
-  onProductsClick: () => void;
-  onClientsClick: () => void;
-  onSellersClick: () => void;
-  onOrdersClick: () => void;
-  onLogout: () => void;
+interface Client {
+  id: number;
+  userName: string;
+  email: string;
+  password: string;
 }
 
-const SideBar: React.FC<SideBarProps> = ({ isOpen, onProductsClick, onClientsClick, onSellersClick, onOrdersClick, onLogout }) => {
+const styles = {
+  header: {
+    textAlign: 'center',
+    backgroundColor: '#0a0a0a',
+    color: '#e0e1dd',
+    padding: '10px',
+    borderRadius: '8px',
+    marginBottom: '20px',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+  },
+  paper: {
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#f5f5f5',
+  },
+  tableHeadRow: {
+    backgroundColor: '#0a0a0a',
+  },
+  tableHeadCell: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
+  tableBodyRow: {
+    '&:hover': {
+      backgroundColor: '#f1f1f1',
+    },
+  },
+  deleteButton: {
+    color: '#d32f2f',
+  },
+  switchButton: {
+    color: '#ffffff',
+    backgroundColor: '#0a0a0a',
+    '&:hover': {
+      backgroundColor: '#333333',
+    },
+    marginLeft: '10px',
+  },
+};
+
+const ClientsTable: React.FC = () => {
+  const [clients, setClients] = useState<Client[]>([]);
+
+  const fetchUsersByRole = async (role: string) => {
+    try {
+      const response = await axios.get<Client[]>(`http://localhost:5000/admin/users/${role}`);
+      setClients(response.data);
+    } catch (error) {
+      console.log('Error fetching users: ', error);
+    }
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/admin/users/${userId}`);
+      console.log(`Server response: ${response.status}`);
+      if (response.status === 200) {
+        setClients((prevClients) => prevClients.filter((client) => client.id !== userId));
+      } else {
+        console.error('Failed to delete user, status code:', response.status);
+      }
+    } catch (error) {
+      console.error('Error deleting user: ', error);
+    }
+  };
+
+  const handleSwitchToSeller = async (userId: number) => {
+    try {
+      await axios.put(`http://localhost:5000/admin/users/switch/${userId}`, { role: 'seller' });
+      fetchUsersByRole('client');
+    } catch (error) {
+      console.error('Error switching user to seller: ', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsersByRole('client');
+  }, []);
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer
-        variant="persistent"
-        open={isOpen}
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: 240,
-            boxSizing: 'border-box',
-            backgroundColor: "#263238",
-            color: "#fff",
-          },
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" noWrap sx={{ color: '#fff' }}>
-            Menu
-          </Typography>
-        </Toolbar>
-        <List>
-          <ListItem button onClick={onClientsClick}>
-            <ListItemIcon sx={{ color: '#fff' }}><PeopleIcon /></ListItemIcon>
-            <ListItemText primary="Clients" />
-          </ListItem>
-          <ListItem button onClick={onProductsClick}>
-            <ListItemIcon sx={{ color: '#fff' }}><ShoppingCartIcon /></ListItemIcon>
-            <ListItemText primary="Products" />
-          </ListItem>
-          <ListItem button onClick={onSellersClick}>
-            <ListItemIcon sx={{ color: '#fff' }}><StoreIcon /></ListItemIcon>
-            <ListItemText primary="Sellers" />
-          </ListItem>
-          <ListItem button onClick={onOrdersClick}>
-            <ListItemIcon sx={{ color: '#fff' }}><InboxIcon /></ListItemIcon>
-            <ListItemText primary="Orders" />
-          </ListItem>
-        </List>
-        <List>
-          <ListItem button onClick={onLogout}>
-            <ListItemIcon sx={{ color: '#fff' }}><ExitToAppIcon /></ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
-        </List>
-      </Drawer>
-    </Box>
+    <div style={{ padding: '20px' }}>
+      <Typography variant="h3" gutterBottom sx={styles.header}>
+        Clients
+      </Typography>
+      <Paper sx={styles.paper}>
+        <Table>
+          <TableHead>
+            <TableRow sx={styles.tableHeadRow}>
+              <TableCell sx={styles.tableHeadCell}>ID</TableCell>
+              <TableCell sx={styles.tableHeadCell}>Username</TableCell>
+              <TableCell sx={styles.tableHeadCell}>Email</TableCell>
+              <TableCell sx={styles.tableHeadCell}>Password</TableCell>
+              <TableCell sx={styles.tableHeadCell}>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {clients.map((client) => (
+              <TableRow key={client.id} sx={styles.tableBodyRow}>
+                <TableCell>{client.id}</TableCell>
+                <TableCell>{client.userName}</TableCell>
+                <TableCell>{client.email}</TableCell>
+                <TableCell>{client.password}</TableCell>
+                <TableCell>
+                  <IconButton
+                    aria-label="delete"
+                    sx={styles.deleteButton}
+                    onClick={() => handleDeleteUser(client.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <Button
+                    variant="contained"
+                    sx={styles.switchButton}
+                    onClick={() => handleSwitchToSeller(client.id)}
+                  >
+                    Switch to Seller
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+    </div>
   );
 };
 
-export default SideBar;
+export default ClientsTable;
