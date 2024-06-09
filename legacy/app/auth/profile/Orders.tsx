@@ -77,53 +77,58 @@ const OrdersList: React.FC = () => {
 
     return (
         <Box sx={{ width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h4" sx={{ textAlign: 'center' }}>My Orders List</Typography>
-            </Box>
-            <List>
-                {orders.map(order => (
-                    <ListItem key={order.id} sx={{ padding: 0 }}>
-                        <Card sx={{ width: '100%', mb: 2, padding: 2 }}>
-                            <CardContent>
-                                <Typography variant="h6" gutterBottom>
-                                    Order ID: {order.id}
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    {JSON.parse(order.products).map((product: [number, number]) => {
-                                        const productId = product[0];
-                                        const quantity = product[1];
-                                        const price = prodPrices(productId);
-                                        const subtotal = price ? price * quantity : 0;
-                                        return (
-                                            <Grid item xs={12} sm={6} md={4} key={productId} sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <CardMedia
-                                                    component="img"
-                                                    image={prodImages(productId)}
-                                                    alt={prodNames(productId)}
-                                                    sx={{ width: 120, height: 120, objectFit: 'cover', marginRight: 2 }}
-                                                />
-                                                <Box sx={{ flexGrow: 1 }}>
-                                                    <Typography variant="body1">{prodNames(productId)}</Typography>
-                                                    <Typography variant="body2">Quantity: {quantity}</Typography>
-                                                    <Typography variant="body2">Price: ${price}</Typography>
-                                                    <Typography variant="body2">Subtotal: ${subtotal}</Typography>
-                                                </Box>
-                                            </Grid>
-                                        );
-                                    })}
-                                </Grid>
-                                <Typography variant="h6" gutterBottom>
-                                    Status: {order.status}
-                                </Typography>
-                                <Typography variant="h4" sx={{float:'right'}}>
-                                    Total: ${order.totalAmount}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h4" sx={{ textAlign: 'center' }}>My Orders List</Typography>
+    </Box>
+    <List>
+        {orders.map(order => (
+            <ListItem key={order.id} sx={{ padding: 0 }}>
+                <Card sx={{ width: '100%', mb: 2, padding: 2, boxShadow: 3 }}>
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                           <b> Order ID:</b> {order.id}
+                        </Typography>
+                        <Grid container spacing={2}>
+                            {JSON.parse(order.products).map((product: [number, number]) => {
+                                const productId = product[0];
+                                const quantity = product[1];
+                                const price = prodPrices(productId);
+                                const subtotal = price ? price * quantity : 0;
+                                return (
+                                    <Grid item xs={12} sm={6} md={4} key={productId} sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Card sx={{ display: 'flex', alignItems: 'center', padding: 2, boxShadow: 3 }}>
+                                            <CardMedia
+                                                component="img"
+                                                image={prodImages(productId)}
+                                                alt={prodNames(productId)}
+                                                sx={{ width: 120, height: 120, objectFit: 'cover', marginRight: 2 }}
+                                            />
+                                            <Box sx={{ flexGrow: 1 }}>
+                                                <Typography variant="body1">{prodNames(productId)}</Typography>
+                                                <Typography variant="body2">Quantity: {quantity}</Typography>
+                                                <Typography variant="body2">Price: ${price}</Typography>
+                                                <Typography variant="body2">Subtotal: ${subtotal}</Typography>
+                                            </Box>
+                                        </Card>
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
+                        <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+                            <b>Status:</b> {order.status}
+                        </Typography>
+                        <Typography variant="h4" sx={{ float: 'right', color:'darkred' }}>
+                            Total: ${order.totalAmount}
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </ListItem>
+        ))}
+    </List>
+</Box>
+
+    
+    
     );
 };
 

@@ -108,7 +108,7 @@ const EditProfile: React.FC = () => {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                    {role === "Client" &&
+                    {role === "client" &&
                       <TextField
                         fullWidth
                         label="Address"

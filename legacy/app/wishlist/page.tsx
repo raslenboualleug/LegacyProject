@@ -5,7 +5,7 @@ import axios from "axios";
 import { Grid, Box, Button } from "@mui/material";
 import ProductCard from "../ProductCard";
 import Navbar from "../Navbar";
-import {jwtDecode} from "jwt-decode"; // Removed curly braces
+import {jwtDecode} from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -13,12 +13,11 @@ const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
-  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode<{ id: string }>(token); // Type inference
+      const decoded = jwtDecode<{ id: string }>(token);
       setUserId(decoded.id);
     }
   }, []);
@@ -57,6 +56,10 @@ const Wishlist = () => {
     }
   };
 
+  const handleRemoveFromWishlist = (productId: number) => {
+    setWishlistItems((prevItems) => prevItems.filter(item => item.id !== productId));
+  };
+
   return (
     <div>
       <Navbar />
@@ -90,6 +93,7 @@ const Wishlist = () => {
                   product={product}
                   isWishlist={true}
                   onClick={() => router.push(`/Oneproduct/${product.id}`)}
+                  onRemove={handleRemoveFromWishlist} // Pass the function as a prop
                 />
               </Grid>
             ))}

@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
   const[counter,setCounter]=useState(JSON.parse(localStorage.getItem('Items')|| '[]').length)
   useEffect(() => {  
     const storedUser = localStorage.getItem('user')|| '';
-    setUser(JSON.parse(storedUser));
+    if(storedUser)setUser(JSON.parse(storedUser));
     setCounter(counter)
   },[counter]);
   return (

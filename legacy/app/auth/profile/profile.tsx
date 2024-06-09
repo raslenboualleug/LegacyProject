@@ -57,12 +57,12 @@ const UserProfile: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{backgroundColor:'darkred'}}>
   <Navbar />
   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '90%', margin: '0 auto', padding: 3, marginTop: '50px' }}>
-    <Card sx={{ width: '100%', maxWidth: '1200px', padding: 3, boxShadow: 3, mb: showOrders ? 3 : 0 }}>
+    <Card sx={{ width: '100%', maxWidth: '1200px', padding: 3, boxShadow: 3, mb: showOrders ? 3 : 0  }}>
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3  }}>
           <Avatar sx={{ width: 86, height: 86, mr: 2 }} />
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
