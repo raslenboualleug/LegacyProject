@@ -18,15 +18,12 @@ import Link from 'next/link';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar: React.FC = () => {
- const [users,setUser]= useState({})
-  const user = localStorage.getItem('user');  
-
-      const[counter,setCounter]=useState(JSON.parse(localStorage.getItem('Items')|| '[]').length)
-
+ const [user,setUser]= useState('')
+  const[counter,setCounter]=useState(JSON.parse(localStorage.getItem('Items')|| '[]').length)
   useEffect(() => {  
-     setCounter(counter)
     const storedUser = localStorage.getItem('user')|| '';
-    setUser(storedUser);
+    if(storedUser)setUser(JSON.parse(storedUser));
+    setCounter(counter)
   },[counter]);
   return (
     <AppBar
@@ -89,7 +86,7 @@ const Navbar: React.FC = () => {
           <Link href='/cart'  style={{textDecoration:"none",color:"black"}}>
           <IconButton color="inherit">
             
-            <Badge badgeContent={counter} color="primary">
+            <Badge badgeContent={counter} color="primary" sx={{ '& .MuiBadge-badge': { backgroundColor: 'red' } }}>
             <ShoppingCartIcon />
             </Badge>
           </IconButton>
