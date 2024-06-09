@@ -6,8 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const styles = {
   header: {
     textAlign: 'center',
-    backgroundColor: '#0a0a0a',
-    color: '#ffffff',
+  
+    color: 'black',
     padding: '10px',
     borderRadius: '8px',
     marginBottom: '20px',

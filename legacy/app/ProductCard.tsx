@@ -1,8 +1,7 @@
-'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import {
   Grid,
   Card,
@@ -17,7 +16,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/navigation';
-import Shop from './shop/page';
+
 interface Product {
   id: number;
   name: string;
@@ -29,21 +28,21 @@ interface Product {
   userId: number;
   rating: GLfloat;
   numOfRating: number;
-  // quantity: number;
 }
 
 interface ProductCardProps {
   product: Product;
   onClick: () => void;
-  isWishlist: Boolean;
+  isWishlist: boolean;
   setUpdate?: Function;
-  update?: Boolean;
+  update?: boolean;
+  onRemove: (productId: number) => void; 
 }
-
 
 interface Item extends Product {
   quantity: number;
 }
+
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
@@ -51,8 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isWishlist,
   update,
   setUpdate,
- 
-
+  onRemove, // Destructure the new prop
 }) => {
   const router = useRouter();
   const [AddToCart, setAddToCart] = useState(false);
@@ -64,7 +62,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   useEffect(() => {
     localStorage.setItem('counter', JSON.stringify(counter));
-
   }, [counter]);
 
   useEffect(() => {
@@ -83,7 +80,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.stopPropagation();
     if (user) {
       let cartItems: Item[] = JSON.parse(localStorage.getItem('Items') || '[]');
-      setCounter(cartItems.length)
+      setCounter(cartItems.length);
       const existingItem = cartItems.find((item) => item.id === product.id);
       if (existingItem) {
         existingItem.quantity += 1;
@@ -156,6 +153,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         showConfirmButton: false,
         timer: 1500,
       });
+      onRemove(productId); // Call the onRemove function to update the wishlist
     } catch (error) {
       console.error('Error removing product from wishlist:', error);
       Swal.fire({
@@ -178,12 +176,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
               (product.rating * product.numOfRating + newRate) / numOfRate,
           })
           .then(() => {
-            setUpdate ? setUpdate(!update) : null
+            setUpdate ? setUpdate(!update) : null;
           });
-        // setNewRate(rate);
         Swal.fire({
           icon: 'success',
-          title: 'rating updated',
+          title: 'Rating updated',
           text: `${product.name} ${rate} stars !!`,
           showConfirmButton: false,
           timer: 2000,
@@ -246,7 +243,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             '&:hover': { backgroundColor: 'black' },
           }}
           disableRipple
-          onClick={(e) =>{addToCart(e, product)} }
+          onClick={(e) => addToCart(e, product)}
         >
           Add to cart <ShoppingCartIcon sx={{ ml: 1 }} />
         </Button>
@@ -257,11 +254,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </Typography>
 
         <Rating
-          name="unique-rating"
-          defaultValue={product.rating}
+          name="simple-controlled"
+          defaultValue={newRate}
           precision={0.5}
           max={5}
-          value={product.rating}
+          value={newRate}
           onClick={(e) => {
             e.stopPropagation();
             const value = (e.target as HTMLInputElement).value;
@@ -269,24 +266,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             if (newRate !== 0) {
               setNumOfRate(numOfRate + 1);
               addRatings(newRate);
-              // console.log('target value', parseInt(newRate));
-              console.log(
-                'numOfRate',
-                numOfRate,
-                `rating ${product.name}`,
-                newRate
-              );
+              console.log('numOfRate', numOfRate, `rating ${product.name}`, newRate);
             }
           }}
-          // onClick={(e) => {
-
-          //   e.stopPropagation();
-          //   if (newRate !== null) {
-          //     setNumOfRate(numOfRate + 1);
-          //     addRatings(e, newRate);
-          //   console.log('numOfRate', numOfRate, 'newrate', newRate);
-          //   }
-          // }}
         ></Rating>
         <Typography>{product.numOfRating}</Typography>
 

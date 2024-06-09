@@ -1,25 +1,23 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Box, Button ,Typography} from "@mui/material";
+import { Grid, Box, Button } from "@mui/material";
 import ProductCard from "../ProductCard";
 import Navbar from "../Navbar";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
-=======
 
->>>>>>> 1fed72e60f8d3ff3b8d6a46d9e4bb44b0b3c0b46
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
- const router=useRouter()
+  const router = useRouter();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token) as { id: string };
+      const decoded = jwtDecode<{ id: string }>(token);
       setUserId(decoded.id);
     }
   }, []);
@@ -39,28 +37,27 @@ const Wishlist = () => {
     };
 
     fetchWishlist();
-<<<<<<< HEAD
-  }, [userId, wishlistItems]);
-=======
   }, [userId]);
->>>>>>> 1fed72e60f8d3ff3b8d6a46d9e4bb44b0b3c0b46
 
   const moveAllToBag = async () => {
     try {
-      const cartItems = JSON.parse(localStorage.getItem('Items') || '[]') as any[];
+      const cartItems = JSON.parse(localStorage.getItem("Items") || "[]") as any[];
       for (const product of wishlistItems) {
         cartItems.push({
           ...product,
           quantity: 1,
           discountedPrice: product.discountedPrice,
-          discount: product.discount
+          discount: product.discount,
         });
       }
-      localStorage.setItem('Items', JSON.stringify(cartItems));
-
+      localStorage.setItem("Items", JSON.stringify(cartItems));
     } catch (error) {
       console.error("Error moving all items to cart", error);
     }
+  };
+
+  const handleRemoveFromWishlist = (productId: number) => {
+    setWishlistItems((prevItems) => prevItems.filter(item => item.id !== productId));
   };
 
   return (
@@ -77,28 +74,27 @@ const Wishlist = () => {
             }}
           >
             <Box sx={{ flexGrow: 1 }}>
-            <h2> My   Wishlist</h2>
-
+              <h2>My Wishlist</h2>
             </Box>
-            <Link  href="/cart">
-            <Button
-              variant="contained"
-              style={{ color: "white", backgroundColor: "red" }}
-              onClick={moveAllToBag}
-            >
-              Move All to Bag
-            </Button>
+            <Link href="/cart">
+              <Button
+                variant="contained"
+                style={{ color: "white", backgroundColor: "red" }}
+                onClick={moveAllToBag}
+              >
+                Move All to Bag
+              </Button>
             </Link>
           </Box>
           <Grid container spacing={3}>
             {wishlistItems.map((product) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-               <ProductCard
-              product={product}
-              isWishlist={false} 
-              onClick={() => router.push(`/Oneproduct/${product.id}`)}
-            />
-
+                <ProductCard
+                  product={product}
+                  isWishlist={true}
+                  onClick={() => router.push(`/Oneproduct/${product.id}`)}
+                  onRemove={handleRemoveFromWishlist} // Pass the function as a prop
+                />
               </Grid>
             ))}
           </Grid>

@@ -4,6 +4,7 @@ import { Box, List, ListItem, Button, IconButton } from '@mui/material';
 import Link from 'next/link';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CarouselComponent from './carosel';
 const images = [
   'https://slidechef.net/wp-content/uploads/2023/09/Iphone-15-Presentation-Template.jpg',
   'https://static.wixstatic.com/media/1c92ab_a0c05a895d1045e89bc3b81e71d31a7d~mv2.jpg',
@@ -68,7 +69,8 @@ const Navbanner: React.FC = () => {
           </List>
         </Box>
         <Box component="main" sx={{ flexGrow: 1, p: 3, width: '55%' }}>
-          <div style={{ position: 'relative', width: '100%', height: '500px' }}>
+          <CarouselComponent/>
+          {/* <div style={{ position: 'relative', width: '100%', height: '500px' }}>
             {images.map((src, index) => (
               <img
                 key={index}
@@ -90,7 +92,7 @@ const Navbanner: React.FC = () => {
             <IconButton onClick={()=>nextSlide(1)} disabled={imgIndex===3} style={{ position: 'absolute', top: '50%', right: '20px', zIndex: 1 }}>
               <ArrowForwardIosIcon />
             </IconButton>
-          </div>
+          </div> */}
         </Box>
       </Box>
       <hr />
