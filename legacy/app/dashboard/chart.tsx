@@ -53,8 +53,8 @@ const Charts: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const productsResponse = await axios.get<Product[]>('http://localhost:5000/Admin/products');
-      const usersResponse = await axios.get<User[]>('http://localhost:5000/Admin/users');
+      const productsResponse = await axios.get<Product[]>('http://localhost:5000/admin/products');
+      const usersResponse = await axios.get<User[]>('http://localhost:5000/admin/users');
       setProductsData(productsResponse.data);
       setUsersData(usersResponse.data);
     } catch (error) {
@@ -75,15 +75,18 @@ const Charts: React.FC = () => {
     ],
   };
 
-  // Count the number of sellers and buyers
-  const userRoleCounts = usersData.reduce((acc, user) => {
-    if (user.role === 'seller') {
-      acc.sellers += 1;
-    } else if (user.role === 'buyer') {
-      acc.buyers += 1;
-    }
-    return acc;
-  }, { sellers: 0, buyers: 0 });
+
+  const userRoleCounts = usersData.reduce(
+    (acc, user) => {
+      if (user.role === 'seller') {
+        acc.sellers += 1;
+      } else if (user.role === 'buyer') {
+        acc.buyers += 1;
+      }
+      return acc;
+    },
+    { sellers: 0, buyers: 0 }
+  );
 
   const usersChartData = {
     labels: ['Sellers', 'Buyers'],
