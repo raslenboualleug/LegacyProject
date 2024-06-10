@@ -24,7 +24,7 @@ const UserProfile: React.FC = () => {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    
+    setRole(localStorage.getItem('role'))
     const token = localStorage.getItem('token');
     if (token) {
       const decoded: any = jwtDecode(token);
@@ -104,7 +104,7 @@ const UserProfile: React.FC = () => {
           >
             Modify Info
           </Button>
-          {role === 'Seller' ? (
+          {role === 'seller' ? (
             <Button
               variant="contained"
               sx={{ color: 'white', bgcolor: 'black', mr: 1 ,
