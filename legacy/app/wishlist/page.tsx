@@ -13,6 +13,10 @@ const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
+<<<<<<< HEAD
+=======
+  const [wishes, setWishes] = useState(0);
+>>>>>>> 878f83681a949859a0c7b20843c29b911e2e8f5f
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,6 +34,8 @@ const Wishlist = () => {
             `http://localhost:5000/Client/wishlist/${userId}`
           );
           setWishlistItems(response.data);
+          setWishes(response.data.length);
+          localStorage.setItem('wish', JSON.stringify(response.data));
         } catch (error) {
           console.error("Error fetching wishlist items", error);
         }

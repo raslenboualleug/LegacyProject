@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, TextField, Modal, Box } from '@mui/material';
+import { Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button, TextField, Modal, Box ,Paper} from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import Swal from 'sweetalert2'
 
@@ -19,31 +19,27 @@ const styles = {
   header: {
     textAlign: 'center',
     backgroundColor: '#0a0a0a',
-    color: '#e8eaf6',
+    color: 'white',
     padding: '20px',
     borderRadius: '10px',
     marginBottom: '20px',
     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
   },
   tableHeadRow: {
-    backgroundColor: '#5b3594',
+    backgroundColor: 'black',
   },
   tableHeadCell: {
-    color: '#ffffff',
+    color: 'white',
     fontWeight: 'bold',
     fontSize: '1.1rem',
   },
-  tableBodyRow: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: '#f3e5f5',
-    },
-  },
+
   modal: {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 500,
+    width: 800,
     bgcolor: '#ffffff',
     boxShadow: 24,
     p: 4,
@@ -63,7 +59,7 @@ const styles = {
   actionButton: {
     marginLeft: '10px',
     backgroundColor: '#5e35b1',
-    color: '#ffffff',
+    color: 'black',
     '&:hover': {
       backgroundColor: '#452780',
     },
@@ -71,11 +67,18 @@ const styles = {
   addButton: {
     marginBottom: '20px',
     backgroundColor: '#5b3594',
-    color: '#ffffff',
+    color: 'black',
     '&:hover': {
-      backgroundColor: '#452780',
+      backgroundColor: 'white',
     },
   },
+  
+  
+    paper: {
+      padding: '20px',
+      borderRadius: '8px',
+      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    },
 };
 
 const ProductsTable: React.FC = () => {
@@ -201,12 +204,8 @@ const ProductsTable: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <Typography variant="h3" gutterBottom sx={styles.header}>
-        Products
-      </Typography>
-      <Button variant="contained" sx={styles.addButton} onClick={handleOpenAdd}>
-        Add Product
-      </Button>
+      
+      <Paper style={styles.paper}>
       <TableContainer>
         <Table>
           <TableHead>
@@ -222,7 +221,7 @@ const ProductsTable: React.FC = () => {
           </TableHead>
           <TableBody>
             {products.map((product) => (
-              <TableRow key={product.id} sx={styles.tableBodyRow}>
+              <TableRow key={product.id} >
                 <TableCell>{product.name}</TableCell>
                 <TableCell>
                   <img src={product.picture} alt={product.name} width={50} height={50} />
@@ -233,10 +232,10 @@ const ProductsTable: React.FC = () => {
                 <TableCell>{product.description}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleOpenModify(product)}>
-                    <Edit sx={{ color: '#5e35b1' }} />
+                    <Edit sx={{ color: 'black' }} />
                   </IconButton>
                   <IconButton onClick={() => deleteProduct(product.id)}>
-                    <Delete sx={{ color: '#d32f2f' }} />
+                    <Delete sx={{ color: 'red' }} />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -364,6 +363,7 @@ const ProductsTable: React.FC = () => {
           </Button>
         </Box>
       </Modal>
+      </Paper>
     </div>
   );
 };

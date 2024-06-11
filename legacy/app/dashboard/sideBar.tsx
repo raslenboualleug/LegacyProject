@@ -1,53 +1,56 @@
-// components/SideBar.tsx
+'use client';
 
 import React from 'react';
-import { Drawer, List, ListItem, ListItemText, IconButton, Box, Divider } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Toolbar, Button, Box, Divider, Typography } from '@mui/material';
 
 interface SideBarProps {
-  isOpen: boolean;
-  toggleSidebar: () => void;
   onClientsClick: () => void;
   onSellersClick: () => void;
   onProductsClick: () => void;
   onOrdersClick: () => void;
+  onChartsClick: () => void;
 }
 
 const SideBar: React.FC<SideBarProps> = ({
-  isOpen,
-  toggleSidebar,
   onClientsClick,
   onSellersClick,
   onProductsClick,
-  onOrdersClick
+  onOrdersClick,
+  onChartsClick,
 }) => {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <IconButton onClick={toggleSidebar} sx={{ color: '#000', position: 'fixed', top: 10, left: 10, zIndex: 1300 }}>
-        <MenuIcon />
-      </IconButton>
-      <Drawer variant="persistent" open={isOpen} onClose={toggleSidebar} sx={{ width: 240, flexShrink: 0 }}>
-        <Box sx={{ width: 240, backgroundColor: '#f5f5f5', height: '100%' }}>
-          <List>
-            <ListItem button onClick={onClientsClick}>
-              <ListItemText primary="Clients" />
-            </ListItem>
-            <Divider />
-            <ListItem button onClick={onSellersClick}>
-              <ListItemText primary="Sellers" />
-            </ListItem>
-            <Divider />
-            <ListItem button onClick={onProductsClick}>
-              <ListItemText primary="Products" />
-            </ListItem>
-            <Divider />
-            <ListItem button onClick={onOrdersClick}>
-              <ListItemText primary="Orders" />
-            </ListItem>
-          </List>
+    <AppBar position="fixed" sx={{ backgroundColor: 'white', color: 'black', width: '100%' }}>
+      
+      <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Typography>
+      <Button color="inherit"sx={{ display: 'flex', justifyContent: 'flex-start',mr:25 }}>
+            <b> Exclusive Dashboard </b>
+          </Button>
+       
+      </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Button color="inherit" onClick={onClientsClick}>
+            Clients
+          </Button>
+          <Divider orientation="vertical" flexItem />
+          <Button color="inherit" onClick={onSellersClick}>
+            Sellers
+          </Button>
+          <Divider orientation="vertical" flexItem />
+          <Button color="inherit" onClick={onProductsClick}>
+            Products
+          </Button>
+          <Divider orientation="vertical" flexItem />
+          <Button color="inherit" onClick={onOrdersClick}>
+            Orders
+          </Button>
+          <Divider orientation="vertical" flexItem />
+          <Button color="inherit" onClick={onChartsClick}>
+            Statistics
+          </Button>
         </Box>
-      </Drawer>
-    </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

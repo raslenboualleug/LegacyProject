@@ -18,16 +18,18 @@ import Link from 'next/link';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar: React.FC = () => {
- const [users,setUser]= useState({})
-  const user = localStorage.getItem('user');  
-
-      const[counter,setCounter]=useState(JSON.parse(localStorage.getItem('Items')|| '[]').length)
-
+ const [user,setUser]= useState('')
+  const[counter,setCounter]=useState(JSON.parse(localStorage.getItem('Items')|| '[]').length)
+  const [wishes, setWishes] = useState(
+    JSON.parse(localStorage.getItem('wish') || '[]').length
+  );
   useEffect(() => {  
-     setCounter(counter)
+    
     const storedUser = localStorage.getItem('user')|| '';
-    setUser(storedUser);
-  },[counter]);
+    if(storedUser)setUser(JSON.parse(storedUser));
+    setCounter(counter)
+    setWishes(wishes);
+  },[counter,wishes]);
   return (
     <AppBar
       position="sticky"
@@ -55,12 +57,20 @@ const Navbar: React.FC = () => {
           >
             <Button color="inherit">About</Button>
           </Link>
+          {user? <Link
+            href="/shop"
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            <Button color="inherit">Shop</Button>
+          </Link>:
           <Link
             href="/auth/signUp"
             style={{ textDecoration: 'none', color: 'black' }}
           >
             <Button color="inherit">SignUp</Button>
           </Link>
+          }
+          
         </Box>
         <Box
           sx={{
@@ -82,14 +92,20 @@ const Navbar: React.FC = () => {
             href="/wishlist"
             style={{ textDecoration: 'none', color: 'black' }}
           >
-            <IconButton color="inherit">
-              <FavoriteBorderIcon />
+           <IconButton color="inherit">
+              <Badge
+                badgeContent={wishes}
+                color="primary"
+                sx={{ '& .MuiBadge-badge': { backgroundColor: 'red' } }}
+              >
+                <FavoriteBorderIcon />
+              </Badge>
             </IconButton>
           </Link>
           <Link href='/cart'  style={{textDecoration:"none",color:"black"}}>
           <IconButton color="inherit">
             
-            <Badge badgeContent={counter} color="primary">
+            <Badge badgeContent={counter} color="primary" sx={{ '& .MuiBadge-badge': { backgroundColor: 'red' } }}>
             <ShoppingCartIcon />
             </Badge>
           </IconButton>

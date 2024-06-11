@@ -12,7 +12,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid ,Paper} from '@mui/material';
 
 ChartJS.register(
   CategoryScale,
@@ -34,13 +34,19 @@ interface Product {
   picture: string;
   userId: number;
 }
-
+const styles = {
+  
+  paper: {
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+  },}
 interface User {
   id: number;
   userName: string;
   email: string;
   password: string;
-  role: string; 
+  role: string[];
 }
 
 const Charts: React.FC = () => {
@@ -57,6 +63,7 @@ const Charts: React.FC = () => {
       const usersResponse = await axios.get<User[]>('http://localhost:5000/admin/users');
       setProductsData(productsResponse.data);
       setUsersData(usersResponse.data);
+      console.log(usersResponse);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -75,13 +82,12 @@ const Charts: React.FC = () => {
     ],
   };
 
-
   const userRoleCounts = usersData.reduce(
     (acc, user) => {
-      if (user.role === 'seller') {
-        acc.sellers += 1;
-      } else if (user.role === 'buyer') {
+      if (user.role.includes('client')) {
         acc.buyers += 1;
+      } else if (user.role.includes('seller')) {
+        acc.sellers += 1;
       }
       return acc;
     },
@@ -96,30 +102,39 @@ const Charts: React.FC = () => {
         backgroundColor: ['rgba(255,99,132,0.2)', 'rgba(54,162,235,0.2)'],
         borderColor: ['rgba(255,99,132,1)', 'rgba(54,162,235,1)'],
         borderWidth: 2,
-        data: [userRoleCounts.sellers, userRoleCounts.buyers],
+        data: [userRoleCounts.buyers, userRoleCounts.sellers],
       },
     ],
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6" component="div" gutterBottom>
-            Users (Sellers vs Buyers)
-          </Typography>
-          <Doughnut data={usersChartData} />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardContent>
-          <Typography variant="h6" component="div" gutterBottom>
-            Products by Stock
-          </Typography>
-          <Bar data={productsChartData} />
-        </CardContent>
-      </Card>
+    <Paper style={styles.paper}>
+    <Box sx={{ flexGrow: 1, padding: '20px', marginTop: '10px',width:'90%', justifyContent: 'center' ,ml:7 }}>
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent>
+              <Typography variant="h4" component="div" gutterBottom sx={{textAlign:'center'}}>
+                Users (Sellers vs Buyers)
+              </Typography>
+              <Doughnut data={usersChartData}  />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ height: '100%'}}>
+            <CardContent>
+              <Typography variant="h4" component="div" gutterBottom sx={{textAlign:'center',mb:17}}>
+                Products by Stock
+              </Typography>
+              <Bar data={productsChartData} />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
+    </Paper>
   );
 };
 

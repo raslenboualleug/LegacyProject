@@ -29,23 +29,19 @@ const styles = {
     backgroundColor: 'black',
   },
   tableHeadRow: {
-    backgroundColor: 'bluergb(139, 223, 235)',
+    backgroundColor: '#f44336',
   },
   tableHeadCell: {
-    color: '#ffffff',
+    color: 'white',
     fontWeight: 'bold',
   },
-  tableBodyRow: {
-    '&:hover': {
-      backgroundColor: '#f1f1f1',
-    },
-  },
+ 
   deleteButton: {
     color: '#d32f2f',
   },
   switchButton: {
-    color: '#ffffff',
-    backgroundColor: '#0a0a0a',
+    color: '#d32f2f',
+    backgroundColor: 'transparent',
     '&:hover': {
       backgroundColor: '#333333',
     },
@@ -94,9 +90,9 @@ const ClientsTable: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-    <Typography variant="h4" component="h1">
-              Clients
-            </Typography>
+      <Typography variant="h3" gutterBottom sx={styles.header}>
+        Clients
+      </Typography>
       <Paper sx={styles.paper}>
         <Table>
           <TableHead>
@@ -110,7 +106,7 @@ const ClientsTable: React.FC = () => {
           </TableHead>
           <TableBody>
             {clients.map((client) => (
-              <TableRow key={client.id} sx={styles.tableBodyRow}>
+              <TableRow key={client.id} >
                 <TableCell>{client.id}</TableCell>
                 <TableCell>{client.userName}</TableCell>
                 <TableCell>{client.email}</TableCell>

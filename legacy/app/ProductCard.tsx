@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import {
   Grid,
   Card,
@@ -36,13 +36,12 @@ interface ProductCardProps {
   isWishlist: boolean;
   setUpdate?: Function;
   update?: boolean;
-  onRemove: (productId: number) => void; 
+  onRemove: (productId: number) => void;
 }
 
 interface Item extends Product {
   quantity: number;
 }
-
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
@@ -50,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isWishlist,
   update,
   setUpdate,
-  onRemove, // Destructure the new prop
+  onRemove,
 }) => {
   const router = useRouter();
   const [AddToCart, setAddToCart] = useState(false);
@@ -58,11 +57,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [numOfRate, setNumOfRate] = useState(0);
   const [newRate, setNewRate] = useState<GLfloat>(0);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const [counter, setCounter] = useState(localStorage.getItem('counter') || 0);
+  const [counter, setCounter] = useState(
+    parseInt(localStorage.getItem('counter') || '0', 10)
+  );
+  const [wishes, setWishes] = useState(
+    parseInt(localStorage.getItem('wishes') || '0', 10)
+  );
 
   useEffect(() => {
-    localStorage.setItem('counter', JSON.stringify(counter));
-  }, [counter]);
+    localStorage.setItem('counter', counter.toString());
+    localStorage.setItem('wishes', wishes.toString());
+  }, [counter, wishes]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -80,7 +85,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.stopPropagation();
     if (user) {
       let cartItems: Item[] = JSON.parse(localStorage.getItem('Items') || '[]');
-      setCounter(cartItems.length);
       const existingItem = cartItems.find((item) => item.id === product.id);
       if (existingItem) {
         existingItem.quantity += 1;
@@ -89,6 +93,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           ...product,
           quantity: 1,
         });
+        setCounter(counter + 1);
       }
       localStorage.setItem('Items', JSON.stringify(cartItems));
       Swal.fire({
@@ -111,7 +116,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
           userId: userId,
           productId: product.id,
         });
-
+        let wishlistItems: Item[] = JSON.parse(
+          localStorage.getItem('wish') || '[]'
+        );
+        const existingItem = wishlistItems.find(
+          (item) => item.id === product.id
+        );
+        if (!existingItem) {
+          wishlistItems.push({
+            ...product,
+            quantity: 1,
+          });
+          setWishes(wishes + 1);
+          localStorage.setItem('wish', JSON.stringify(wishlistItems));
+        }
         Swal.fire({
           icon: 'success',
           title: 'Added to wishlist',
@@ -146,6 +164,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
       await axios.delete('http://localhost:5000/Client/wishlist/remove', {
         data: { userId: userId, productId: productId },
       });
+      let wishlistItems: Item[] = JSON.parse(
+        localStorage.getItem('wish') || '[]'
+      );
+      wishlistItems = wishlistItems.filter((item) => item.id !== productId);
+      localStorage.setItem('wish', JSON.stringify(wishlistItems));
+      setWishes(wishes - 1);
       Swal.fire({
         icon: 'success',
         title: 'Removed from wishlist',
@@ -153,7 +177,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         showConfirmButton: false,
         timer: 1500,
       });
-      onRemove(productId); // Call the onRemove function to update the wishlist
+      onRemove(productId);
     } catch (error) {
       console.error('Error removing product from wishlist:', error);
       Swal.fire({
@@ -168,19 +192,27 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const addRatings = async (rate: number) => {
     const productId: number = product.id;
+    console.log(rate, 'ratee');
+
+    console.log(
+      'rate',
+      (product.rating * product.numOfRating + rate) / (product.numOfRating + 1)
+    );
+
     if (user) {
       try {
         await axios
           .put(`http://localhost:5000/Client/rati/${productId}`, {
             rating:
-              (product.rating * product.numOfRating + newRate) / numOfRate,
+              (product.rating * product.numOfRating + rate) /
+              (product.numOfRating + 1),
           })
           .then(() => {
             setUpdate ? setUpdate(!update) : null;
           });
         Swal.fire({
           icon: 'success',
-          title: 'Rating updated',
+          title: 'rating updated',
           text: `${product.name} ${rate} stars !!`,
           showConfirmButton: false,
           timer: 2000,
@@ -255,18 +287,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         <Rating
           name="simple-controlled"
-          defaultValue={newRate}
           precision={0.5}
+          defaultValue={product.rating}
           max={5}
-          value={newRate}
           onClick={(e) => {
             e.stopPropagation();
-            const value = (e.target as HTMLInputElement).value;
-            if (value) setNewRate(parseInt(value));
-            if (newRate !== 0) {
+            const value = parseFloat((e.target as HTMLInputElement).value);
+
+            console.log(value);
+
+            if (value) setNewRate(value);
+            if (value) {
               setNumOfRate(numOfRate + 1);
-              addRatings(newRate);
-              console.log('numOfRate', numOfRate, `rating ${product.name}`, newRate);
+              addRatings(value);
             }
           }}
         ></Rating>
